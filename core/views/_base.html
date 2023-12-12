@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" class="{{ @tplDarkmodeClass }}">
+<head>
+    <meta charset="utf-8">
+    <title>{{ @tplPagetitle }} | Site Info Center Light 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/uikit.min.css" />
+    <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/sic.css" />
+    <link rel="icon" type="image/png" href="{{ @BASE }}/favicon-128.png" sizes="128x128" />
+</head>
+<body>
+<div class="menubar" data-uk-sticky>
+    <div class="uk-flex uk-flex-between">
+        <a href="{{ @BASE }}/" class="menubar__logo">
+            <img src="{{ @BASE }}/core/assets/img/sic-logo-simple-inverted.svg" alt="SIC Logo">
+        </a>
+        <nav class="menubar__menu">
+            <ul class="uk-flex uk-flex-middle">
+                <include href="core/views/_menu-items.html" />
+
+                <!-- mobile menu toggler -->
+                <li class="uk-margin-left uk-hidden@s">
+                    <a href="#mobilemenu" uk-toggle class="uk-flex uk-flex-middle">
+                        <span uk-icon="icon: menu" class="uk-margin-small-right"></span>
+                    </a>
+                </li>
+                <!-- /mobile menu toggler -->
+            </ul>
+        </nav>
+        <nav class="menubar__actions">
+            <ul class="uk-flex uk-flex-middle">
+                <li>
+                    <a href="" uk-tooltip="title: Toggle Dark Mode; pos: left" class="darkmode-toggle">
+                        <span uk-icon="icon: paint-bucket"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ @BASE }}/profile/" uk-tooltip="title: User; pos: left">
+                        <span uk-icon="icon: user"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ @BASE }}/logout" uk-tooltip="title: Logout; pos: left">
+                        <span uk-icon="icon: sign-out"></span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+{* if default login credentials used, output a notification *}
+<check if="{{ @SESSION.defaultCredentialsUsed }}">
+    <div class="uk-alert-danger uk-margin-remove-top"  uk-alert>
+        <a class="uk-alert-close" uk-close></a>
+        <div class="uk-container">
+            <p>
+                <strong>You're using the default login credentials for new SIC installations!</strong>
+                You should change them <strong>immediately in the <a href="{{ @BASE }}/profile">profile settings</a></strong>.
+            </p>
+        </div>
+    </div>
+</check>
+
+{* if demo mode is active, output a notification *}
+<check if="{{ @sicDemoMode }}">
+    <div class="uk-alert-warning uk-margin-remove-top"  uk-alert>
+        <a class="uk-alert-close" uk-close></a>
+        <div class="uk-container">
+            <p>
+                <strong>Demo Mode is ON!</strong>
+                This feature is primary for taking documentation screenshots with obfuscated site names. You can disable it in <strong>/core/extras/demomode-settings.php</strong>
+            </p>
+        </div>
+    </div>
+</check>
+
+<div id="mobilemenu" uk-offcanvas>
+    <div class="uk-offcanvas-bar offcanvasmenu">
+
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+        <ul class="offcanvasmenu__menu">
+            <include href="core/views/_menu-items.html" />
+        </ul>
+
+    </div>
+</div>
+
+<main id="sic-ui-main">
+
+    <div class="uk-container">
+        <check if="{{ @tplHeadline!='' }}">
+            <h1>{{ @tplHeadline }}</h1>
+        </check>
+
+        <check if="{{ @tplPartial!='' }}">
+            <include href="{{ @tplPartial }}" />
+        </check>
+    </div>
+
+</main>
+
+
+
+
+<footer>
+    <div class="uk-container">
+        <div class="licenses">
+            SIC {{ @tplSicVersion }} by <a href="https://www.andreherdling.de">André Herdling</a> |
+            <a href="{{ @BASE }}/info">License &amp; Attribution</a>
+            <check if="{{ @userIsAdmin }}">
+                | <a href="{{ @BASE }}/tests">Unit tests</a>
+            </check>
+        </div>
+    </div>
+</footer>
+
+{* include sic vuejs specific files only on "/" path *}
+<check if="{{ @PATH=='/' }}">
+    <script src="{{ @BASE }}/core/assets/js/vue.global.js"></script>
+    <script src="{{ @BASE }}/core/assets/js/axios.min.js"></script>
+    <script src="{{ @BASE }}/core/assets/js/sic.app.js"></script>
+</check>
+
+
+<script src="{{ @BASE }}/core/assets/js/uikit.min.js"></script>
+<script src="{{ @BASE }}/core/assets/js/uikit-icons.min.js"></script>
+<script src="{{ @BASE }}/core/assets/js/main.js"></script>
+
+
+
+
+{*
+   Include enqueued messages.
+   This is a workaround to pass messages from php to js.
+   This is needed for example to show a message after a form submit.
+
+    @tplEnqueuedMessages is set in the controller SicUiViews.
+    js function notify() is defined in main.js
+*}
+<check if="{{ @tplEnqueuedMessages }}">
+    <script>
+        <repeat group="{{ @tplEnqueuedMessages }}" value="{{ @message }}">
+            notify('{{ @message.type }}', '{{ @message.message }}');
+        </repeat>
+    </script>
+</check>
+
+</body>
+</html>

@@ -1,0 +1,701 @@
+html{
+    --sic-theme-primary: #6344CC;
+    --sic-theme-secondary: #30C5AB;
+    --sic-theme-tertiary: #8CBBDC;
+    --sic-theme-menubar: #8F90A8;
+    --sic-theme-card: #ffff;
+    --sic-theme-menucolor: #FFF;
+    --sic-theme-menuehighightcolor: #2A2B38;
+    --sic-theme-background: #F3F3F3;
+    --sic-theme-link: #6344CC;
+    --sic-theme-link-hover: #8CBBDC;
+    --sic-theme-text: #000;
+}
+html.darkmode{
+    --sic-theme-primary: #0E2954;
+    --sic-theme-secondary: #1F6E8C;
+    --sic-theme-tertiary: #84A7A1;
+    --sic-theme-menubar: #84A7A1;
+    --sic-theme-card: #435B66;
+    --sic-theme-menucolor: #fff;
+    --sic-theme-menuehighightcolor: #0E2954;
+    --sic-theme-background: #2D4356;
+    --sic-theme-link: #84A7A1;
+    --sic-theme-link-hover: #2E8A99;
+    --sic-theme-text: #fff;
+}
+
+/* dark mode styles */
+.darkmode table tr:hover{
+    background-color: var(--sic-theme-background);
+}
+.darkmode body.history{
+    background-color: var(--sic-theme-card);
+}
+.darkmode .uk-card-default,
+.darkmode .uk-card-default .uk-card-title,
+.darkmode .uk-select,
+.darkmode .uk-input,
+.darkmode .uk-textarea,
+.darkmode .uk-search-default .uk-search-input,
+.darkmode body.history,
+.darkmode h2,
+.darkmode h1{
+    color: var(--sic-theme-text);
+}
+.darkmode .uk-button-default,
+.darkmode th.sortable.sort{
+    color: var(--sic-theme-text);
+}
+.darkmode .uk-select,
+.darkmode .uk-input,
+.darkmode .uk-textarea{
+    background-color: transparent;
+}
+.darkmode tr.refresh-error{
+    background-color: rgba(243,206,206,0.5);
+}
+.darkmode .uk-pagination a{
+    color: var(--sic-theme-text);
+}
+.darkmode .filter-count-badge{
+    background-color: var(--sic-theme-secondary);
+}
+.darkmode blockquote{
+    color: var(--sic-theme-text);
+}
+.darkmode em{
+    color: var(--sic-theme-tertiary);
+}
+
+::selection {
+    background-color: var(--sic-theme-primary);
+}
+
+em{
+    color: var(--sic-theme-primary);
+}
+
+.nowrap{
+    white-space: nowrap;
+}
+
+.uk-modal-dialog{
+    background-color: var(--sic-theme-card);
+}
+
+html {
+    background-color: var(--sic-theme-background);
+    color: var(--sic-theme-text);
+    border-bottom: 5px solid var(--sic-theme-primary);
+    min-height: calc(100vh - 5px);
+}
+
+body.history {
+    background-color: #fff;
+}
+.history-container{
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+main{
+    margin: 3rem 0;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: normal;
+    color: var(--sic-theme-text);
+}
+a{
+    color: var(--sic-theme-primary);
+}
+
+nav ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+nav li{
+    margin: 0;
+}
+footer a{
+    color: var(--sic-theme-text);
+}
+footer a:hover,
+footer a:focus{
+    color: var(--sic-theme-link-hover);
+}
+.uk-input:focus, .uk-select:focus, .uk-textarea:focus,
+.uk-search-default .uk-search-input:focus{
+    border-color: var(--sic-theme-primary);
+}
+.uk-card-default{
+    background-color: var(--sic-theme-card);
+}
+.uk-form-label{
+    color: var(--sic-theme-text);
+}
+
+.menubar{
+    background-color: var(--sic-theme-menubar);
+}
+.menubar__logo{
+    background-color: var(--sic-theme-primary);
+}
+.menubar__logo img{
+    max-width: 60px;
+}
+.menubar__actions{
+    background-color: var(--sic-theme-secondary);
+}
+
+.menubar__logo,
+.menubar__menu,
+.menubar__actions{
+    padding: 1em;
+    color: var(--sic-theme-menucolor);
+}
+.menubar__logo a,
+.menubar__menu a,
+.menubar__actions a{
+    color: var(--sic-theme-menucolor);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+.menubar__menu a:hover,
+.menubar__menu a:focus,
+.menubar__menu a:active,
+.menubar__actions a:hover,
+.menubar__actions a:focus,
+.menubar__actions a:active{
+    color: var(--sic-theme-menuehighightcolor);
+}
+.menubar__menu li.uk-active a{
+    font-weight: bold;
+}
+.menubar__logo{
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+.menubar__actions li{
+    margin: 0  0.5em;
+}
+
+.uk-offcanvas-bar{
+    background-color: var(--sic-theme-primary);
+}
+.offcanvasmenu__menu{
+    padding: 0;
+    margin: 3rem 0 !important;
+    list-style: none;
+}
+.offcanvasmenu__menu li{
+    margin: 0 !important;
+    padding: 1em 0 !important;
+    border-bottom: 1px solid var(--sic-theme-menucolor);
+}
+.offcanvasmenu__menu li.uk-active a{
+    font-weight: bold;
+}
+.offcanvasmenu__menu .uk-visible\@m,
+.offcanvasmenu__menu .uk-visible\@s{
+    display: inline !important;
+}
+.offcanvasmenu__menu li.uk-visible\@s{
+    display: block !important;
+}
+
+.uk-badge,
+.uk-button-primary{
+    background-color: var(--sic-theme-primary);
+}
+.uk-button-primary:focus, .uk-button-primary:hover{
+    background-color: var(--sic-theme-link-hover);
+}
+.uk-link, a{
+    color: var(--sic-theme-link);
+}
+.uk-link-toggle:focus .uk-link, .uk-link-toggle:hover .uk-link, .uk-link:hover, a:hover{
+    color: var(--sic-theme-link-hover);
+}
+.uk-pagination a{
+    display: block;
+    padding: 0.2em 0.6em;
+    background-color: var(--sic-theme-primary);
+    color: var(--sic-theme-background);
+}
+.uk-pagination a:hover,
+.uk-pagination a:focus,
+.uk-pagination .uk-active a{
+    font-weight: bold;
+    background-color: var(--sic-theme-secondary);
+    color: var(--sic-theme-background);
+}
+.uk-pagination > *{
+    padding-left: 0.2em;
+}
+
+.checkswitch{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 0.8rem;
+}
+.checkswitch span{
+    margin-left: 0.5rem;
+}
+.checkswitch input{
+    appearance: none;
+    width: 3rem;
+    height: 1.5rem;
+    display: block;
+    position: relative;
+}
+.checkswitch input::before,
+.checkswitch input::after{
+    content: '';
+    position: absolute;
+    display: block;
+    border-radius: 1rem;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+.checkswitch input::before{
+    background-color: #ee395b;
+    width: 100%;
+    height: 100%;
+    transition: background 0.3s ease;
+    box-shadow: inset 0px 2px 2px 0px rgba(0,0,0,0.1);
+}
+.checkswitch input::after{
+    background-color: #e4e4e4;
+    height: 1.5rem;
+    width: 1.5rem;
+    transition: transform 0.2s ease;
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.1);
+}
+.checkswitch input:checked::after{
+    transform: translateX(1.5rem);
+}
+.checkswitch input:checked::before{
+    background-color: #32d296;
+}
+
+
+
+.sic-header{
+    margin-bottom: 2em;
+}
+.sic-header .logo{
+    max-width: 50%;
+}
+
+.download-summary.hide {
+    display: none;
+}
+
+.uk-card.inactivesites {
+    margin-top: 40px;
+}
+
+.inactivesites__header{
+    cursor: pointer;
+}
+.inactivesites__header h2::before{
+    content: "+";
+    display: inline-block;
+    margin-right: 0.6em;
+}
+.inactivesites__header.active h2::before{
+    content: "-";
+}
+.inactivesites__card-body{
+    display: none;
+}
+.inactivesites__header.active+.inactivesites__card-body{
+    display: block;
+}
+
+.uk-table td {
+    vertical-align: middle;
+    font-size: 0.9em;
+}
+
+.uk-table.sites{
+    margin-top: 0;
+}
+
+.filter-count-badge{
+    background-color: #e5e5e5;
+    color: #000;
+    font-weight: bold;;
+}
+
+tr.refreshing {
+    background-color: var(--sic-theme-tertiary) !important;
+    color: var(--sic-theme-text) !important;
+}
+tr.refreshing a.history{
+    color: #666;
+    border-color: #666;
+}
+
+tr.refreshing button.refresh span {
+    -webkit-animation: rotating 1s linear infinite;
+    -moz-animation: rotating 1s linear infinite;
+    -ms-animation: rotating 1s linear infinite;
+    -o-animation: rotating 1s linear infinite;
+    animation: rotating 1s linear infinite;
+}
+
+span.recent,
+td.recent {
+    color: #999;
+    font-style: italic;
+
+}
+
+tr.refresh-error {
+    background-color: #f3cece;
+    color: #000;
+}
+tr.refresh-error a.history{
+    color: #666;
+    border-color: #666;
+}
+
+/* preventing too long php version strings*/
+td.php_ver {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table tr:hover {
+    background-color: #eee;
+}
+
+table td.actions,
+table div.siteactions,
+table div.useractions{
+    text-align: right;
+    white-space: nowrap;
+}
+.siteactions{
+    min-width: 140px;
+}
+.useractions{
+    min-width: 100px;
+}
+.siteactions__deleteform,
+.useractions__deleteform{
+    display: inline;
+}
+
+
+/*preventing flickering when filtering by system*/
+tbody.uk-animation-target {
+    display: none;
+    position: static;
+}
+
+a.disabled {
+    pointer-events: none;
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
+.licenses {
+    padding: 3em;
+    text-align: center;
+    font-size: 0.6em;
+}
+
+#progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 990; /* high z-index because of sticky navbar */
+    pointer-events: none;
+}
+
+#progressbar {
+    border-radius: 0 !important;
+    height: 5px;
+    margin: 0;
+    background-color: transparent;
+    width :100%;
+    appearance: none;
+    padding: 0;
+    display: block;
+    border: none;
+    outline: none;
+}
+#progressbar::-webkit-progress-bar {
+    background-color: transparent !important;
+}
+#progressbar::-moz-progress-bar {
+    background: repeating-linear-gradient(to right, var(--sic-theme-primary) 0%, var(--sic-theme-secondary) 50%, var(--sic-theme-primary) 100%) !important;
+    background-position: 0 100%;
+}
+/* For some reason safari ignores the styles
+ * when selector combined with the one on top.
+ * So we have to repeat it here
+*/
+#progressbar::-webkit-progress-value{
+    background: repeating-linear-gradient(to right, var(--sic-theme-primary) 0%, var(--sic-theme-secondary) 50%, var(--sic-theme-primary) 100%) !important;
+    background-position: 0 100%;
+}
+
+th,
+.uk-table th,
+th.sortable,
+th[data-sortable="true"]{
+    color: var(--sic-theme-link);
+    cursor: pointer;
+}
+th.sortable::before,
+th[data-sortable="true"]::before{
+    content: '⇅';
+    display: inline-block;
+    margin-right: 1em;
+    width: 1em;
+}
+th.sortable.sort,
+th[aria-sort="ascending"],
+th[aria-sort="descending"],
+th[aria-sort="ascending"] .datatable-sorter,
+th[aria-sort="descending"] .datatable-sorter{
+    font-weight: bold;
+    color: var(--sic-theme-text) !important
+}
+th.sortable.sort::before,
+th[aria-sort="ascending"]::before{
+    content: '↑';
+}
+th.sortable.sort.sort-desc::before,
+th[aria-sort="descending"]::before{
+    content: '↓';
+}
+
+.filter-and-search{
+    margin-bottom: 2em;
+}
+
+/*filter button*/
+ul.sites-filter>li{
+    width: 100%;
+    box-sizing: border-box;
+}
+ul.sites-filter>li.uk-first-column>a {
+    border: 1px solid #e5e5e5;
+}
+ul.sites-filter a{
+    font-size: 1em !important;
+}
+
+/* search field */
+.uk-search-default,
+#search_sites{
+    width: 100%;
+}
+#search_sites{
+    height: auto;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+#system-filter{
+    height: auto;
+    padding: 5px;
+}
+.uk-search-default .uk-search-icon svg:first-child{
+    display: none; /*removing duplicate icon (side effect of vue)*/
+}
+
+/* reset filter and search */
+#resetFilterAndSearch{
+    width: 100%;
+    font-size: 1em;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 1.5;
+    min-height: 33px;
+}
+
+/*rotation animation keyframes*/
+@-webkit-keyframes rotating
+
+/* Safari & Chrome */
+    {
+    from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotating {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/* satellite code textarea (copy source, satgen) */
+#satCode{
+    min-height: calc(90vh - 300px);
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+/* datatables-simple (used on manage sites / manage users) */
+.datatable-top{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+.datatable-dropdown label{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    white-space: nowrap;
+}
+.datatable-dropdown .uk-select{
+    margin-right: 0.5rem;
+}
+.datatable-search{
+    width: 60%;
+}
+.datatable-info{
+    margin-bottom: 1rem;
+}
+
+/* revealable password fields (used for site secrets) */
+.pwreveal{
+    white-space: nowrap;
+}
+.pwreveal input,
+.pwreveal button{
+    appearance: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    outline: none;
+    color: var(--sic-theme-text);
+}
+.pwreveal input{
+    font-family: monospace;
+    margin-right: 0.5rem;
+    color: var(--sic-theme-text);
+}
+
+/*some improvements to get more sites into viewport*/
+html {
+    font-size: 14px;
+}
+#sic-ui-main .uk-table td,
+.uk-table th {
+    padding: 0.5em;
+}
+
+#sic-ui-main table .uk-button,
+#sic-ui-main .uk-card-header .uk-button,
+#sic-ui-main .filter-and-search .uk-button{
+    padding: 0 1em;
+    line-height: 2em;
+}
+
+#sic-ui-main table .uk-button span.uk-icon,
+#sic-ui-main .uk-card-header .uk-button span.uk-icon{
+    position: relative;
+    top: -0.1em;
+}
+
+#sic-ui-main span.uk-icon>svg {
+    width: 1em;
+    height: auto;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+
+
+
+/*print styles*/
+@media print {
+    html {
+        font-size: 10pt !important;
+        padding: 10mm;
+    }
+
+    body {
+        padding: 0;
+    }
+
+    h1 {
+        font-size: 20pt;
+        margin-top: 0;
+    }
+
+    h2 {
+        font-size: 15pt;
+    }
+
+    .uk-table th {
+        font-size: 10pt;
+        font-weight: bold;
+        padding: 1mm;
+    }
+
+    .uk-table td {
+        padding: 1mm;
+        font-size: 10pt;
+    }
+
+    td.actions,
+    .uk-button,
+    .licenses {
+        display: none !important;
+    }
+
+    .uk-card-body,
+    .uk-card-header {
+        padding: 0;
+    }
+
+}

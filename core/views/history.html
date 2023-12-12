@@ -1,0 +1,44 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ @tplPagetitle }} | Site Info Center Light 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/uikit.min.css" />
+    <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/sic_light.css" />
+    <link rel="icon" type="image/png" href="{{ @BASE }}/favicon-128.png" sizes="128x128" />
+
+    <script>
+        var parent_window = parent.window;
+        var root = document.documentElement;
+        if(parent_window.darkMode == true){
+            root.classList.add('darkmode');
+        }else{
+            root.classList.remove("darkmode");
+        }
+    </script>
+</head>
+<body class="history">
+<div class="uk-container uk-container-center history-container">
+    <div class="uk-block uk-block-secondary uk-contrast">
+        <div class="uk-container">
+            <h2>History for <strong>{{ @tplHistorySiteName }}</strong</h2>
+            <table class="uk-table uk-table-divider">
+                <repeat group="{{ @tplHistoryData }}" value="{{ @line }}">
+                    <tr>
+                        <repeat group="{{ @line }}" value="{{ @cell }}">
+                            <td>{{ @cell }}</td>
+                        </repeat>
+                    </tr>
+                </repeat>
+            </table>
+            <a href='{{ @tplHistoryDownloadUrl }}' class='uk-button uk-button-primary' type='button' style='margin-top: 20px;' target='blank' rel='noopener'>Download CSV</a>
+        </div>
+    </div>
+</div>
+
+<script src="{{ @BASE }}/core/assets/js/uikit.min.js"></script>
+<script src="{{ @BASE }}/core/assets/js/uikit-icons.min.js"></script>
+
+</body>
+</html>
+

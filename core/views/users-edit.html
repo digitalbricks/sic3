@@ -1,0 +1,135 @@
+{* NOTE: This template is included on user EDIT and user ADD.
+* So the form action URL always points to /users/edit/[ID] unless
+* its an edit of an existing user or an add of a new user.
+* Only the ID of 0 (set in SicUiView for the usersAdd route) triggers
+* the creation of a new user (database entry).
+*}
+
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <check if="{{ @tplUserData.is_active == '1' }}">
+            <true>
+                <span class="uk-label uk-label-success">Active</span>
+            </true>
+            <false>
+                <span class="uk-label uk-label-danger">Inactive</span>
+            </false>
+        </check>
+        <check if="{{ @tplUserData.is_admin == '1' }}">
+            <span class="uk-label uk-label-primary">ADMIN</span>
+        </check>
+        <check if="{{ @tplUserData.id !=0 }}">
+            <strong>User added to SIC:</strong> {{ date('d.m.y H:i:s', strtotime(@tplUserData.created_at)) }} by {{ @getUserName(@tplUserData.created_by) }} |
+            <strong>Last edit:</strong> {{ date('d.m.y H:i:s', strtotime(@tplUserData.updated_at)) }}
+        </check>
+
+    </div>
+    <div class="uk-card-body">
+        <form class="uk-form-stacked" method="post" action="{{ @BASE }}/users/edit/{{ @tplUserData.id }}">
+
+            <input type="hidden" name="userId" value="{{ @tplUserData.id }}">
+            <input type="hidden" name="csrf" value="{{ @tplCSRF }}">
+
+            <div class="uk-grid uk-grid-small" data-uk-grid>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="userName">
+                        Username*
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="userName" id="userName" class="uk-input" type="text" placeholder="John Doe" value="{{ @tplUserData.username }}" required>
+                    </div>
+                </div>
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="userMail">
+                        E-Mail-Adresse*
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="userMail" id="userMail" class="uk-input" type="email" placeholder="mail@example.com" value="{{ @tplUserData.email }}" required>
+                    </div>
+                </div>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="userPassword">
+                        Password {{ @tplUserData.id == 0 ? '*' : '' }}
+                        <check if="{{ @tplUserData.id == 0 }}">
+                            <true>
+                                <span class="uk-text-small uk-text-muted">(min. 8 characters)</span>
+                            </true>
+                            <false>
+                                <span class="uk-text-small uk-text-muted">(min. 8 characters, leave empty to keep current password)</span>
+                            </false>
+                        </check>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="userPassword" id="userPassword" class="uk-input" type="password"  value="" {{ @tplUserData.id == 0 ? 'required' : '' }}>
+                    </div>
+                </div>
+
+                <check if="{{ @tplCurrentUser == true }}">
+                    <true>
+                        <div class="uk-width-1-2@m">
+                            <div class="uk-form-label">Active / Admin state</div>
+                            <div class="uk-alert-warning uk-margin-remove" uk-alert>
+                                <p>You cannot change your own active or admin state.</p>
+                            </div>
+                        </div>
+                    </true>
+                    <false>
+                        <div class="uk-width-1-4@m">
+                            <div class="uk-form-label">
+                                Toggle user status*
+                            </div>
+                            <div class="uk-form-controls">
+                                <label for="userActive" class="checkswitch">
+                                    <input type="checkbox" name="userActive" id="userActive" value="1" {{ @tplUserData.is_active == 1 ? 'checked' : '' }}>
+                                    <span>
+                                        Active
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="uk-width-1-4@m">
+                            <div class="uk-form-label">
+                                Toggle user admin*
+                            </div>
+                            <div class="uk-form-controls">
+                                <label for="userAdmin" class="checkswitch">
+                                    <input type="checkbox" name="userAdmin" id="userAdmin" value="1" {{ @tplUserData.is_admin == 1 ? 'checked' : '' }}>
+                                    <span>
+                                        Admin rights
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </false>
+                </check>
+
+
+
+
+            </div>
+            <!-- /.uk-grid -->
+
+            <div class="uk-margin-top uk-flex uk-flex-between">
+                <div>
+                    <a href="{{ @BASE }}/users" class="uk-button uk-button-default">
+                        <span class="uk-margin-small-right" data-uk-icon="icon: arrow-left"></span>
+                        Back
+                    </a>
+                </div>
+                <div>
+                    <button type="submit" class="uk-button uk-button-danger">
+                        <span class="uk-margin-small-right" data-uk-icon="icon: check"></span>
+                        Save
+                    </button>
+                </div>
+            </div>
+
+
+
+
+
+        </form>
+    </div>
+</div>

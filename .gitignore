@@ -1,0 +1,10 @@
+/tmp/
+/storage/
+/storage/*
+/.idea/
+/.DS_Store/
+sites-config.php
+history/*.csv
+tests
+.DS_Store
+/core/test/tmp/

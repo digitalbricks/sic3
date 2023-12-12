@@ -1,0 +1,28 @@
+<li class="uk-margin-left {{ @firstUrlSegment == '' ? 'uk-active' : '' }}">
+    <a href="{{ @BASE }}/" class="uk-flex uk-flex-middle">
+        <span uk-icon="icon: home" class="uk-margin-small-right"></span>
+        <span class="uk-visible@m">Dashboard</span>
+    </a>
+</li>
+
+{* admin related menu items only for admins *}
+<check if="{{ @userIsAdmin }}">
+    <li class="uk-margin-left uk-visible@s {{ @firstUrlSegment == 'sites' ? 'uk-active' : '' }}">
+        <a href="{{ @BASE }}/sites" class="uk-flex uk-flex-middle">
+            <span uk-icon="icon: bookmark" class="uk-margin-small-right"></span>
+            <span class="uk-visible@m">Sites</span>
+        </a>
+    </li>
+    <li class="uk-margin-left uk-visible@s {{ @firstUrlSegment == 'users' ? 'uk-active' : '' }}">
+        <a href="{{ @BASE }}/users" class="uk-flex uk-flex-middle">
+            <span uk-icon="icon: users" class="uk-margin-small-right"></span>
+            <span class="uk-visible@m">Users</span>
+        </a>
+    </li>
+    <li class="uk-margin-left uk-visible@s {{ @firstUrlSegment == 'users' ? 'uk-active' : '' }}">
+        <a href="{{ @BASE }}/settings" class="uk-flex uk-flex-middle">
+            <span uk-icon="icon: cog" class="uk-margin-small-right"></span>
+            <span class="uk-visible@m">Settings</span>
+        </a>
+    </li>
+</check>

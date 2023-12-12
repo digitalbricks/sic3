@@ -1,0 +1,23 @@
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <h2 class="uk-card-title">JSON</h2>
+    </div>
+    <div class="uk-card-body">
+        <p>
+            You can use the JSON data as backup or to import it into another instance of SIC. The JSON data can be downloaded as file below.
+        </p>
+
+{* NOTE: no indention for JSON output here by intent! *}
+        <textarea rows="20" class="uk-textarea" readonly>
+{{ @tplSitesConfigJson }}
+        </textarea>
+
+
+    </div>
+    <div class="uk-card-footer">
+        <a href="{{ @BASE }}/sites/export/download" class="uk-button uk-button-primary">
+            <span class="uk-margin-small-right" data-uk-icon="icon: download"></span>
+            Download JSON file
+        </a>
+    </div>
+</div>

@@ -1,0 +1,135 @@
+{*
+<pre>
+{{ var_dump(@tplAllSites) }}
+</pre>
+*}
+
+
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <div uk-grid class="uk-flex uk-flex-between uk-flex-bottom">
+            <div>
+                <h2 class="uk-card-title">All sites <span class="uk-badge">{{ @tplAllSitesCount }}</span></h2>
+            </div>
+            <div class="header-left">
+                <a href="{{ @BASE }}/migrate" class="uk-button uk-button-default" data-uk-tooltip title="Migrate Sites from SIClight"><span data-uk-icon="icon: upload"></span></a>
+                <a href="{{ @BASE }}/sites/export" class="uk-button uk-button-default" data-uk-tooltip title="Export configuration"><span data-uk-icon="icon: download"></span> Export</a>
+                <a href="{{ @BASE }}/sites/add" class="uk-button uk-button-primary" data-uk-tooltip title="Add Site"><span data-uk-icon="icon: plus"></span> Add</a>
+            </div>
+        </div>
+    </div>
+    <div class="uk-card-body">
+
+        <check if="{{ @@tplAllSitesCount>0 }}">
+            <true>
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-divider" id="sitesTable">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>System</th>
+                            <th data-searchable="false" data-sortable="false">Secret</th>
+                            <th data-type="date" data-format="DD/MM/YY">Updated</th>
+                            <th>Created By</th>
+                            <th>Status</th>
+                            <th data-searchable="false" data-sortable="false"><span class="sr-only">Actions</span></th>
+                        </tr>
+                        </thead>
+
+                        <repeat group="{{ @tplAllSites }}" value="{{ @site }}">
+                            <tr>
+                                <td>
+                                    {{ @site.name }}
+                                    <check if="{{ @site.link != '' }}">
+                                        <a href="{{ @site.link }}" target="_blank">
+                                            <span uk-icon="icon: link"></span>
+                                        </a>
+                                    </check>
+                                </td>
+                                <td>{{ @site.sys }}</td>
+                                <td>
+                                    <div class="pwreveal">
+                                        <input class="pwreveal__input" type="password" value="{{ @site.secret}}" readonly>
+                                        <button class="pwreveal__btn" type="button" data-uk-tooltip="Reveal Secret">
+                                            <span uk-icon="icon:eye"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>{{ date('d.m.y', strtotime(@site.updated_at)) }}</td>
+                                <td>{{ @getUserName(@site.created_by) }}</td>
+                                <td>
+                                    <check if="{{ @site.is_active == '1' }}">
+                                        <true>
+                                            <span class="uk-label uk-label-success">Active</span>
+                                        </true>
+                                        <false>
+                                            <span class="uk-label uk-label-danger">Inactive</span>
+                                        </false>
+                                    </check>
+                                </td>
+                                <td>
+                                    {* NOTE: We cannot use the .action class on the td element because it will be removed
+                                    by the simpleDatatables script. Instead we added a .nowrap wrapper around the buttons.
+                                    *}
+                                    <div class="nowrap siteactions">
+                                        <a href="{{ @BASE }}/sites/edit/{{ @site.id }}"
+                                           class="siteactions__edit uk-button uk-button-primary"
+                                           data-uk-tooltip title="Edit Site">
+                                            <span uk-icon="icon: pencil"></span>
+                                        </a>
+                                        <a href="{{ @BASE }}/satgen/{{ @site.id }}"
+                                           class="siteactions__edit uk-button uk-button-secondary"
+                                           data-uk-tooltip title="Generate Satellite Code">
+                                            <span uk-icon="icon: code"></span>
+                                        </a>
+
+                                        <form action="{{ @BASE }}/sites/delete/{{ @site.id }}" method="post" class="siteactions__deleteform">
+                                            <input type="hidden" name="siteId" value="{{ @site.id }}">
+                                            <input type="hidden" name="siteName" value="{{ @site.name }}">
+                                            <input type="hidden" name="csrf" value="{{ @tplCSRF }}">
+                                            <button
+                                                    class="siteactions__delete uk-button uk-button-danger"
+                                                    data-uk-tooltip title="Delete Site">
+                                                    <span uk-icon="icon: trash"></span>
+                                            </button>
+                                        </form>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </repeat>
+                    </table>
+                </div>
+
+            </true>
+            <false>
+                <div class="uk-alert-primary" uk-alert>
+                    <p>No sites configured yet. You may <a href="{{ @BASE }}/sites/add"><strong>Add your first site</strong></a>
+                        or <a href="<?= ($BASE) ?>/migrate"><strong>import</strong></a> configuration from <strong>SIClight</strong> <code>sites-config.php</code> or a <strong>SIC</strong> <code>sites-config.json</code> file.</p>
+                </div>
+            </false>
+        </check>
+
+
+
+    </div>
+</div>
+
+
+<script src="{{ @BASE }}/core/assets/js/simple-datatables.min.js"></script>
+<!-- Custom Code -->
+<script>
+    new window.simpleDatatables.DataTable("#sitesTable",{
+        searchable: true,
+        fixedHeight: false,
+        perPageSelect: [10,25,50,100,["All",0]],
+        perPage: 25,
+        classes:{
+            selector: "uk-select",
+            input: "uk-input",
+            paginationList: "uk-pagination",
+            active: "uk-active",
+        }
+    })
+</script>

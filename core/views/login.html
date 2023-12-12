@@ -1,0 +1,65 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ @tplPagetitle }} | Site Info Center Light 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/uikit.min.css" />
+    <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/sic.css" />
+    <link rel="icon" type="image/png" href="{{ @BASE }}/favicon-128.png" sizes="128x128" />
+</head>
+
+{*
+    NOTE:
+    As the login form uses default UIkit classes, it is heavy inspired by a Codepen snippet from
+    user "Hiroki UI": https://codepen.io/Uipiki/pen/VNOoqB
+*}
+<div class="uk-section uk-flex uk-flex-middle uk-animation-fade" uk-height-viewport>
+    <div class="uk-width-1-1">
+        <div class="uk-container">
+            <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid>
+                <div class="uk-width-1-1@m">
+                    <div class="uk-margin uk-width-large uk-margin-auto uk-card uk-card-default uk-card-body uk-box-shadow-large">
+                        <div class="uk-text-center uk-margin-bottom">
+                            <img src="{{ @BASE }}/core/assets/img/sic-logo.svg" width="200" alt="SIC Light 2.0">
+                        </div>
+
+                        {* if default login credentials used, output a notification *}
+                        <check if="{{ @tplLoginError }}">
+                            <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
+                                <strong>Login failed.</strong> Check credentials and try again.
+                            </div>
+                        </check>
+
+
+                        <form method="post"> {* NOTE: self-submitting form does not need action attribute *}
+                            <div class="uk-margin">
+                                <div class="uk-inline uk-width-1-1">
+                                    <span class="uk-form-icon" uk-icon="icon: user"></span>
+                                    <input class="uk-input uk-form-large" type="text" name="username" placeholder="username">
+                                </div>
+                            </div>
+                            <div class="uk-margin">
+                                <div class="uk-inline uk-width-1-1">
+                                    <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                                    <input class="uk-input uk-form-large" type="password" name="password" placeholder="password">
+                                </div>
+                            </div>
+                            <div class="uk-margin">
+                                <button class="uk-button uk-button-primary uk-button-large uk-width-1-1">Login</button>
+                            </div>
+                            <div class="uk-text-small uk-text-center">
+                                Interested? <a href="#">Get your own copy of SIC</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ @BASE }}/core/assets/js/uikit.min.js"></script>
+<script src="{{ @BASE }}/core/assets/js/uikit-icons.min.js"></script>
+
+</body>
+</html>

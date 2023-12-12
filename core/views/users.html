@@ -1,0 +1,130 @@
+{*
+<pre>
+{{ var_dump(@tplAllSites) }}
+</pre>
+*}
+
+
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <div uk-grid class="uk-flex uk-flex-between uk-flex-bottom">
+            <div>
+                <h2 class="uk-card-title">All Users <span class="uk-badge">{{ @tplUsersCount }}</span></h2>
+            </div>
+            <div class="header-left">
+                <a href="{{ @BASE }}/users/add" class="uk-button uk-button-primary" data-uk-tooltip title="Add User"><span data-uk-icon="icon: plus"></span> Add</a>
+            </div>
+        </div>
+    </div>
+    <div class="uk-card-body">
+
+        <check if="{{ @@tplUsersCount>0 }}">
+            <true>
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-divider" id="usersTable">
+                        <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>E-Mail</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                            <th>Created By</th>
+                            <th>Status</th>
+                            <th>Admin</th>
+                            <th data-searchable="false" data-sortable="false"><span class="sr-only">Actions</span></th>
+                        </tr>
+                        </thead>
+
+                        <repeat group="{{ @tplUsers }}" value="{{ @user }}">
+                            <tr>
+                                <td>
+                                    {{ @user.username }}
+                                    <check if="{{ @user.id == @tplCurrentUser.id }}">
+                                        <span class="uk-badge">YOU</span>
+                                    </check>
+                                </td>
+                                <td>{{ @user.email }}</td>
+                                <td>{{ date('d.m.y', strtotime(@user.created_at)) }}</td>
+                                <td>{{ date('d.m.y', strtotime(@user.updated_at)) }}</td>
+                                <td>{{ @getUserName(@user.created_by) }}</td>
+                                <td>
+                                    <check if="{{ @user.is_active == '1' }}">
+                                        <true>
+                                            <span class="uk-label uk-label-success">Active</span>
+                                        </true>
+                                        <false>
+                                            <span class="uk-label uk-label-danger">Inactive</span>
+                                        </false>
+                                    </check>
+                                </td>
+                                <td>
+                                    <check if="{{ @user.is_admin == '1' }}">
+                                        <true>
+                                            <span class="uk-label uk-label-primary">Admin</span>
+                                        </true>
+                                    </check>
+                                </td>
+                                <td>
+                                    {* NOTE: We cannot use the .action class on the td element because it will be removed
+                                    by the simpleDatatables script. Instead we added a .nowrap wrapper around the buttons.
+                                    *}
+                                    <div class="nowrap useractions">
+                                        <a href="{{ @BASE }}/users/edit/{{ @user.id }}"
+                                           class="useractions__edit uk-button uk-button-primary"
+                                           data-uk-tooltip title="Edit Site">
+                                            <span uk-icon="icon: pencil"></span>
+                                        </a>
+
+
+                                        {* don't show delete button for the account of the current logged in user *}
+                                        <check if="{{ @user.id != @tplCurrentUser.id }}">
+                                            <form action="{{ @BASE }}/users/delete/{{ @user.id }}" method="post" class="useractions__deleteform">
+                                                <input type="hidden" name="userId" value="{{ @user.id }}">
+                                                <input type="hidden" name="userName" value="{{ @user.username }}">
+                                                <input type="hidden" name="csrf" value="{{ @tplCSRF }}">
+                                                <button
+                                                        class="useractions__delete uk-button uk-button-danger"
+                                                        data-uk-tooltip title="Delete Site">
+                                                    <span uk-icon="icon: trash"></span>
+                                                </button>
+                                            </form>
+                                        </check>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </repeat>
+                    </table>
+                </div>
+
+            </true>
+            <false>
+                <div class="uk-alert-primary" uk-alert>
+                    <p>No sites configured yet. You may <a href="{{ @BASE }}/sites/add"><strong>Add your first site</strong></a>
+                        or <a href="{{ @BASE }}/migrate"><strong>import configuration from SIClight sites-config.php</strong></a>.</p>
+                </div>
+            </false>
+        </check>
+
+
+
+    </div>
+</div>
+
+
+<script src="{{ @BASE }}/core/assets/js/simple-datatables.min.js"></script>
+<!-- Custom Code -->
+<script>
+    new window.simpleDatatables.DataTable("#usersTable",{
+        searchable: true,
+        fixedHeight: false,
+        perPageSelect: [10,25,50,100,["All",0]],
+        perPage: 25,
+        classes:{
+            selector: "uk-select",
+            input: "uk-input",
+            paginationList: "uk-pagination",
+            active: "uk-active",
+        }
+    })
+</script>

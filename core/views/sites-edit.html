@@ -1,0 +1,153 @@
+{* NOTE: This template is included on site EDIT and site ADD.
+ * So the form action URL always points to /sites/edit/[ID] unless
+ * its an edit of an existing site or an add of a new site.
+ * Only the ID of 0 (set in SicUiView for the sitesAdd route) triggers
+ * the creation of a new site (database entry).
+*}
+
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <check if="{{ @tplSiteData.is_active == '1' }}">
+            <true>
+                <span class="uk-label uk-label-success">Active</span>
+            </true>
+            <false>
+                <span class="uk-label uk-label-danger">Inactive</span>
+            </false>
+        </check>
+        <check if="{{ @tplSiteData.id !=0 }}">
+            <strong>Site added to SIC:</strong> {{ date('d.m.y H:i:s', strtotime(@tplSiteData.created_at)) }} by {{ @getUserName(@tplSiteData.created_by) }} |
+            <strong>Last edit:</strong> {{ date('d.m.y H:i:s', strtotime(@tplSiteData.updated_at)) }}
+        </check>
+
+    </div>
+    <div class="uk-card-body">
+        <div class="uk-alert-warning" uk-alert>
+            <p>If you don't know what to do here, check the <a href="#satellite-setup-modal" uk-toggle>satellite setup instructions</a></p>
+        </div>
+        <form class="uk-form-stacked" method="post" action="{{ @BASE }}/sites/edit/{{ @tplSiteData.id }}">
+
+            <input type="hidden" name="siteId" value="{{ @tplSiteData.id }}">
+            <input type="hidden" name="csrf" value="{{ @tplCSRF }}">
+
+            <div class="uk-grid uk-grid-small" data-uk-grid>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="siteName">
+                        Site name*
+                        <span data-uk-icon="question" data-uk-tooltip="title: Display name for the site in lists."></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="siteName" id="siteName" class="uk-input" type="text" placeholder="example.com" value="{{ @tplSiteData.name }}" required>
+                    </div>
+                </div>
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="siteLink">
+                        Site URL / Link (optional)
+                        <span data-uk-icon="question" data-uk-tooltip="title: If provided, a little link icon will be displayed in lists next to the site name."></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="siteLink" id="siteLink" class="uk-input" type="text" placeholder="https://example.com" value="{{ @tplSiteData.link }}">
+                    </div>
+                </div>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="siteSys">
+                        System identifier*
+                        <span data-uk-icon="question" data-uk-tooltip="title: This tells the satellite which function it should run to determine the system version. Please refer satellite setup instructions."></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input list="syslist" autocomplete="off" name="siteSys" id="siteSys" class="uk-input" type="text" placeholder="e.g. WORDPRESSS" value="{{ @tplSiteData.sys }}" required>
+                        <datalist id="syslist">
+                            <repeat group="{{ @tplSiteData.availableSys }}" key="{{ @identifier}}" value="{{ @description }}">
+                                <option value="{{ @identifier }}">{{ @identifier }} ({{ @description}})</option>
+                            </repeat>
+                            <option value="Lorem">Lorem</option>
+                            <option value="Ipsum">Ipsum</option>
+                        </datalist>
+                    </div>
+                </div>
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="siteUrl">
+                        SIC Satellite URL*
+                        <span data-uk-icon="question" data-uk-tooltip="title: The absolute URL of the satellite script."></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="siteUrl" id="siteUrl" class="uk-input" type="text" placeholder="https://example.com/satellite.php" value="{{ @tplSiteData.url }}" required>
+                    </div>
+                </div>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="siteSecret">
+                        Shared Secret*
+                        <span data-uk-icon="question" data-uk-tooltip="title: If the satellite script is already in place on the server, the Shared Secret has to match the one stored there. If the script is not yet in place, you can choose freely and let SIC generate the satellite PHP code for you."></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="siteSecret" id="siteSecret" class="uk-input" type="text" placeholder="Secret from satellite" value="{{ @tplSiteData.secret }}" required>
+                    </div>
+                </div>
+                <div class="uk-width-1-2@m">
+                    <div class="uk-form-label">
+                        Toogle site status*
+                    </div>
+                    <div class="uk-form-controls">
+                        <label for="siteActive" class="checkswitch">
+                            <input type="checkbox" name="siteActive" id="siteActive" value="1" {{ @tplSiteData.is_active == 1 ? 'checked' : '' }}>
+                            <span>
+                                Active
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- /.uk-grid -->
+
+            <div class="uk-margin-top uk-flex uk-flex-between">
+                <div>
+                    <a href="{{ @BASE }}/sites" class="uk-button uk-button-default">
+                        <span class="uk-margin-small-right" data-uk-icon="icon: arrow-left"></span>
+                        Back
+                    </a>
+                </div>
+                <div>
+                    <button type="submit" class="uk-button uk-button-danger">
+                        <span class="uk-margin-small-right" data-uk-icon="icon: check"></span>
+                        Save
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{*
+Show option of generating satellite file if at least
+the system identifier and the satellite URL are set.
+*}
+<check if="@tplSiteData.sys!='' AND @tplSiteData.url != ''">
+    <div class="uk-card uk-card-default uk-margin-large-top">
+        <div class="uk-card-body">
+            <div class="uk-flex uk-flex-between@s uk-flex-wrap uk-flex-middle" data-uk-grid>
+                <div>
+                    If not already done, you can generate the satellite file for this site now.
+                </div>
+                <div>
+                    <a href="{{ @BASE }}/satgen/{{@@tplSiteData.id}}" class="uk-button uk-button-primary">
+                        <span class="uk-margin-small-right" data-uk-icon="icon: code"></span>
+                        Generate
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</check>
+
+{* Modal with satellite setup information *}
+<div id="satellite-setup-modal" class="uk-flex-top" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        {{ @tplSatSetupHtml | raw }}
+    </div>
+</div>

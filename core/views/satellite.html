@@ -1,0 +1,22 @@
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <div class="uk-flex uk-flex-between uk-flex-middle">
+            <h2 class="uk-card-title uk-margin-remove">PHP Code</h2>
+            <div>
+                <button class="uk-button uk-button-primary uk-button-small" onclick="copyToClipboard('satCode')">
+                   <span uk-icon="icon: copy"></span> Copy
+                </button>
+                <a href="{{ @BASE }}/satdownload/{{@tplSiteId}}" class="uk-button uk-button-secondary uk-button-small">
+                    <span uk-icon="icon: download"></span> Download
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="uk-card-body">
+        <textarea name="satCode" id="satCode" class="uk-textarea" readonly>{{ @tplSatCode }}</textarea>
+    </div>
+    <div class="uk-card-footer">
+        <strong>Satellite downloaded from GitHub:</strong> {{ date('d.m.y H:i:s', @tplSatCacheFileInfo.filemtime) }} |
+        <strong>Cached until:</strong> {{ date('d.m.y H:i:s', @tplSatCacheFileInfo.cacheExpires) }}
+    </div>
+</div>

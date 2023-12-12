@@ -1,0 +1,41 @@
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <h2 class="uk-card-title">Satellite Settings</h2>
+    </div>
+    <div class="uk-card-body">
+        <form class="uk-form-stacked" method="post"> {* action omitted in order to self-post *}
+            <input type="hidden" name="csrf" value="{{ @tplCSRF }}">
+            <label class="uk-form-label" for="satContact">
+                Contact Information <br>
+                <span class="uk-text-muted uk-margin-remove">
+                    The information provided here will be added to the auto-generates SIC satellite.php file.<br>
+                    (The Auto-Generate Satellite Function is availabe on the site edit page.)
+                </span>
+            </label>
+
+            <div class="uk-form-controls">
+                {*
+                NOTE: Do not use indents or linebreaks inside <textarea>
+                to prevent input indendation and saving of empty newlines.
+                *}
+                <textarea name="satContact" id="satContact" class="uk-textarea" >{{ @tplSatContact }}</textarea>
+            </div>
+
+            <div class="uk-margin-top uk-flex uk-flex-between">
+                <div>
+                    <a href="{{ @BASE }}/" class="uk-button uk-button-default">
+                        <span class="uk-margin-small-right" data-uk-icon="icon: arrow-left"></span>
+                        Back
+                    </a>
+                </div>
+                <div>
+                    <button type="submit" class="uk-button uk-button-danger">
+                        <span class="uk-margin-small-right" data-uk-icon="icon: check"></span>
+                        Save
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

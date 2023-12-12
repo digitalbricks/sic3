@@ -1,0 +1,88 @@
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <h2 class="uk-card-title">Site Migration</h2>
+    </div>
+    <div class="uk-card-body">
+
+
+        <check if="{{ @configFileExists=='true' }}">
+            <true>
+                <div class="uk-alert-primary" uk-alert>
+                    A <code>{{ @configFileName }}</code> file was found in the <code>{{ @configFileLocation }}</code> directory. This looks like you want to migrate an existing SIC installation.
+                </div>
+                <p class="uk-text-large">
+                    Do you want to import the existing sites configuration?
+                </p>
+                <p>
+                    If you choose yes, all sites in the <code>{{ @configFileName }}</code> will be copied to the SQLite database of SIC, including all inactive sites.<br>
+                    After the migration process, the <code>{{ @configFileName }}</code> in  <code>{{ @configFileLocation }}</code> will be <strong>deleted</strong>.
+                </p>
+                <div class="uk-flex uk-flex-wrap uk-grid" uk-grid>
+                    <div class="uk-width-1-2@s">
+                        <form method="post">
+                            <button class="uk-button uk-button-danger uk-width-1-1">Yes, import sites configuration</button>
+                            <input type="hidden" name="migrate" value="yes">
+                        </form>
+                    </div>
+                    <div class="uk-width-1-2@s">
+                        <form method="post">
+                            <button class="uk-button uk-button-primary uk-width-1-1">Skip for this session</button>
+                            <input type="hidden" name="migrate" value="no">
+                        </form>
+                    </div>
+                </div>
+            </true>
+            <false>
+                <h1>How to migrate?</h1>
+                <h2>Migrate from <strong>SIClight</strong> using <strong>PHP</strong> config file</h2>
+                <p>
+                    If you were using SIClight and have a bunch of sites already configured in <code>sites-config.php</code>, you
+                    can import them into the SQLite database of SIC. This will allow you to use the new features of SIC, without the need
+                    for reconfiguring all your sites.
+                </p>
+                <p>
+                    <strong>To migrate your sites, please follow these steps:</strong>
+                </p>
+                <ul>
+                    <li>Copy your existing <code>sites-config.php</code> file to the root of the new SIC installation</li>
+                    <li>Reload this page or navigate to the sites overview in SIC</li>
+                    <li>SIC should find the <code>sites-config.php</code> and ask for migration</li>
+                    <li>Click the button for importing the sites to sic</li>
+                    <li><strong>NOTE:</strong> SIC will delete the <code>sites-config.php</code> after migration, so make sure to <strong>keep a backup</strong></li>
+                </ul>
+
+                <hr>
+
+                <h2>Migrate from <strong>SIC</strong> using <strong>JSON</strong> config file</h2>
+                <p>
+                    If you were already using SIC (without "light" postfix) and have a bunch of sites already configured you can export them as JSON file from your
+                    old / other installation as <code>sites-config.json</code>. You can then import this file into the SQLite database of your new SIC installation.
+                </p>
+                <p>
+                    <strong>To migrate your sites, please follow these steps:</strong>
+                </p>
+                <ul>
+                    <li>
+                        Copy your existing <code>sites-config.json</code> file to the <code>storage</code> of the new SIC installation.<br>
+                        <strong>NOTE:</strong> In contrast to the migration using the PHP file, the JSON file must be placed in the <code>storage</code> directory.
+                        This will prevent the file from being accessible from the web while not migrated yet (via .htaccess rule in <code>storage</code> directory).
+                    </li>
+                    <li>Reload this page or navigate to the sites overview in SIC</li>
+                    <li>SIC should find the <code>sites-config.json</code> and ask for migration</li>
+                    <li>Click the button for importing the sites to sic</li>
+                    <li><strong>NOTE:</strong> SIC will delete the <code>sites-config.json</code> after migration, so make sure to <strong>keep a backup</strong></li>
+                </ul>
+
+                <hr>
+
+                <h2>Importing history <strong>CSV</strong> files</h2>
+                <p>
+                    You can copy all your existing history CSV files (from <strong>SIClight</strong> or <strong>SIC</strong> to the <code>storage/history</code> folder.
+                    SIC will use this files if they match the names of the configured sites. This way you can keep your history data.
+                </p>
+            </false>
+        </check>
+
+
+    </div>
+</div>

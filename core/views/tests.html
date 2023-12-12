@@ -1,0 +1,51 @@
+<div class="uk-card uk-card-default">
+    <div class="uk-card-body">
+        <div class="uk-alert-primary" uk-alert>
+            <p>
+                These are just some basic unit tests for SIC functionality. They are not meant to be comprehensive an may be added / removed / changed in the future.
+                I kept this route available and linked in the footer for testing purposes and as a reminder to myself to write more tests ;-)
+            </p>
+        </div>
+        <table class='sites uk-table uk-table-divider'>
+            <thead>
+            <tr>
+                <th>Test Name</th>
+                <th>Result</th>
+                <th>Error</th>
+            </tr>
+            </thead>
+            <tbody>
+
+
+            <repeat group="{{ @tplTestResults }}" value="{{ @result }}">
+            <tr>
+                <td>{{ @result.text }}</td>
+                <td>
+                    <check if="{{ @result.status }}">
+                        <true>
+                            <span class="uk-label uk-label-success">PASS</span>
+                        </true>
+                        <false>
+                            <span class="uk-label uk-label-danger">FAIL</span>
+                        </false>
+                    </check>
+
+                </td>
+                <td>
+                    <check if="{{ @result.status }}">
+                        <true>
+                            -
+                        </true>
+                        <false>
+                            {{ str_replace(@tplTestsPath,'', @result.source) }}
+                        </false>
+                    </check>
+                </td>
+            </tr>
+            </repeat>
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

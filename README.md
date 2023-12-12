@@ -16,26 +16,32 @@ You have a bunch of sites with a couple of different content management systems 
 ## Some features
 ### Refresh information for all sites at once
 Get the current CMS and PHP version of all sites with one click. SIC will request the information from the sites satellites and display the results in a table. You can also download the results as CSV file (results from last refresh in a single file or a per-site history of all refreshes).
+
 ![Refresh all site](core/docs/screenshots/refresh-all.gif)
 
 
 ### Filter by CMS / System
 Filter by CMS / system to get the information of all sites using the same Content Management System / eCommerce Plattform or whatever. This may be helpful if you want to know which sites are using a specific CMS / system version. Useful for example when a security update or hotfix is available for the CMS / system in question.
+
 ![Filter](core/docs/screenshots/filter.gif)
 
 
 ### Search sites
 Search for sites by name – very handy when managing a lot of sites or hostnames with a lot of subdomains.
+
 ![Search](core/docs/screenshots/search.gif)
 
 ### Manage Sites
 Active, inactive, edit, delete, add new sites – all in one place. No need to edit config files anymore.
+
 ![Manage Sites](core/docs/screenshots/manage-sites.jpg)
 ![Add Site](core/docs/screenshots/add-site.jpg)
 
 ### Manage User
 SIC 3 has a user management and a login. You can add new users, edit existing users and delete users. Unlike the former versions of SIC, you now can have multiple users with their own login credentials. Only useres with admin rights are allowed to add/edit configured sites or users.
+
 ![Manage Users](core/docs/screenshots/manage-users.jpg)
+
 ![Edit User](core/docs/screenshots/edit-user.jpg)
 
 ### Generate Satellite

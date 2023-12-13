@@ -43,6 +43,10 @@ html.darkmode{
 .darkmode h1{
     color: var(--sic-theme-text);
 }
+.darkmode .uk-notification-message.uk-notification-message-primary{
+    background-color: var(--sic-theme-primary);
+    color: var(--sic-theme-text);
+}
 .darkmode .uk-button-default,
 .darkmode th.sortable.sort{
     color: var(--sic-theme-text);

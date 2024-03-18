@@ -174,7 +174,7 @@ class Sic {
                 }
                 if(array_key_exists('sat_ver', $latestData)){
                     $site['sat_ver'] = $latestData['sat_ver'];
-                    if(version_compare($latestData['sat_ver'], '0.3', '>=')){
+                    if(version_compare($latestData['sat_ver'], '0.30', '>=')){
                         $site['satPhpinfoSupported'] = true;
                     }
                 }
@@ -728,6 +728,13 @@ class Sic {
                     $response['date'] = date('d.m.Y');
                     $response['id'] = $id;
                     $response['name'] = $sitename;
+
+                    // check satellite version in response and set satPhpinfoSupported flag if >= 0.3
+                    $response['satPhpinfoSupported'] = false;
+                    $resp_array = json_decode($response['response'], true);
+                    if(array_key_exists('sat_ver', $resp_array) && version_compare($resp_array['sat_ver'], '0.30', '>=')){
+                        $response['satPhpinfoSupported'] = true;
+                    }
 
                     // store response for later use
                     $this->satelliteResponse = array(

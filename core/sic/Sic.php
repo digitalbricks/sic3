@@ -147,6 +147,7 @@ class Sic {
             $site['time'] = "";
             $site['date'] = "";
             $site['history'] = false;
+            $site['satPhpinfoSupported'] = false;
 
             // store site in $allSites array
             $this->allSites[$site['id']] = $site;
@@ -173,6 +174,9 @@ class Sic {
                 }
                 if(array_key_exists('sat_ver', $latestData)){
                     $site['sat_ver'] = $latestData['sat_ver'];
+                    if(version_compare($latestData['sat_ver'], '0.3', '>=')){
+                        $site['satPhpinfoSupported'] = true;
+                    }
                 }
                 if(array_key_exists('time', $latestData)){
                     $site['time'] = $latestData['time'];

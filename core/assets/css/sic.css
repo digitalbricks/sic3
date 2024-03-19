@@ -88,6 +88,12 @@ em{
     background-color: var(--sic-theme-card);
 }
 
+.uk-lightbox{
+    background-color: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
 html {
     background-color: var(--sic-theme-background);
     color: var(--sic-theme-text);

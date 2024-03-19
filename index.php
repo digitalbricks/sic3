@@ -49,6 +49,7 @@ $f3->route('GET /api/v1/sites/@endpoint','SicRestApi->apiV1SitesRouteGet');
 $f3->route('POST /api/v1/sites/@endpoint','SicRestApi->apiV1SitesRoutePost');
 $f3->route('GET /api/v1/history/render/@siteId','SicRestApi->apiV1HistoryRenderRouteGet');
 $f3->route('GET /api/v1/history/download/@siteId','SicRestApi->apiV1HistoryDownloadRouteGet');
+$f3->route('GET /api/v1/phpinfo/@siteId','SicRestApi->apiV1PhpInfoRouteGet');
 
 // TESTS route
 $f3->route('GET /tests','SicTests->doTests');

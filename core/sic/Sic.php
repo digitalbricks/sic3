@@ -782,7 +782,7 @@ class Sic {
      *
      * @return array|false Response from given URL and statuscode or false
      */
-    private function sendPostRequest($url,$data){
+    public function sendPostRequest($url,$data){
         if(function_exists(('curl_version'))){
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //causes no output without echo

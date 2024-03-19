@@ -173,4 +173,35 @@ class SicRestApi{
         return;
     }
 
+    public function apiV1PhpInfoRouteGet(){
+        if(!$this->f3->get('sic')->checkLogin(false)){
+            // not logged in
+            http_response_code(401);
+            echo "Not logged in";
+            return;
+        }
+        $siteId = $this->f3->get('PARAMS.siteId');
+        if(!$siteId || $siteId == '' || !is_numeric($siteId)){
+            // no endpoint given
+            http_response_code(405);
+            echo "Route not found";
+            return;
+        }
+        $url = $this->f3->get('sic')->getAllSites()[$siteId]['url'];
+
+        // set payload and url for request
+        $payload = array(
+            'sys' => $this->f3->get('sic')->getAllSites()[$siteId]['sys'],
+            'secret' => $this->f3->get('sic')->getAllSites()[$siteId]['secret'],
+            'action' => 'PHPINFO'
+        );
+
+        $response = $this->f3->get('sic')->sendPostRequest($url,$payload);
+        if(isset($response['statuscode']) && $response['statuscode'] == 200){
+            echo $response['response'];
+        }
+
+        return;
+    }
+
 }

@@ -147,7 +147,7 @@ class Sic {
             $site['time'] = "";
             $site['date'] = "";
             $site['history'] = false;
-            $site['satPhpinfoSupported'] = false;
+            $site['satPhpinfo'] = false;
 
             // store site in $allSites array
             $this->allSites[$site['id']] = $site;
@@ -174,9 +174,9 @@ class Sic {
                 }
                 if(array_key_exists('sat_ver', $latestData)){
                     $site['sat_ver'] = $latestData['sat_ver'];
-                    // check satellite version and set satPhpinfoSupported flag if >= 0.30
-                    if(version_compare($latestData['sat_ver'], '0.30', '>=')){
-                        $site['satPhpinfoSupported'] = true;
+                    // check satellite version and set satPhpinfo url if >= 1.0.0
+                    if(version_compare($latestData['sat_ver'], '1.0.0', '>=')){
+                        $site['satPhpinfo'] = $this->getPhpInfoUrl($id);
                     }
                 }
                 if(array_key_exists('time', $latestData)){
@@ -730,11 +730,11 @@ class Sic {
                     $response['id'] = $id;
                     $response['name'] = $sitename;
 
-                    // check satellite version in response and set satPhpinfoSupported flag if >= 0.30
-                    $response['satPhpinfoSupported'] = false;
+                    // check satellite version in response and set satPhpinfo url if >= 1.0.0
+                    $response['satPhpinfo'] = false;
                     $resp_array = json_decode($response['response'], true);
-                    if(array_key_exists('sat_ver', $resp_array) && version_compare($resp_array['sat_ver'], '0.30', '>=')){
-                        $response['satPhpinfoSupported'] = true;
+                    if(array_key_exists('sat_ver', $resp_array) && version_compare($resp_array['sat_ver'], '1.0.0', '>=')){
+                        $response['satPhpinfo'] = $this->getPhpInfoUrl($id);
                     }
 
                     // store response for later use
@@ -864,10 +864,20 @@ class Sic {
      * getHistoryRenderUrl
      *
      * @param  int $id
-     * @return string|void relative URL of the history renderer URL
+     * @return string|void relative URL of the history renderer
      */
     public function getHistoryRenderUrl(int $id){
         return $this->rootUrl."api/v1/history/render/".$id;
+    }
+
+    /**
+     * getPhpInfoUrl
+     *
+     * @param  int $id
+     * @return string|void relative URL of the phpinfo route
+     */
+    public function getPhpInfoUrl(int $id){
+        return $this->rootUrl."api/v1/phpinfo/".$id;
     }
 
 

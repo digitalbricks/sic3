@@ -4,7 +4,7 @@
     <title>{{ @tplPagetitle }} | Site Info Center Light 2</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/uikit.min.css" />
-    <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/sic_light.css" />
+    <link rel="stylesheet" href="{{ @BASE }}/core/assets/css/sic.css" />
     <link rel="icon" type="image/png" href="{{ @BASE }}/favicon-128.png" sizes="128x128" />
 
     <script>
@@ -18,10 +18,15 @@
     </script>
 </head>
 <body class="history">
-<div class="uk-container uk-container-center history-container">
+<div class="history-container">
     <div class="uk-block uk-block-secondary uk-contrast">
+        <div class="history__header" data-uk-sticky>
+            <div class="uk-container">
+                <h2>History for <strong>{{ @tplHistorySiteName }}</strong></h2>
+            </div>
+
+        </div>
         <div class="uk-container">
-            <h2>History for <strong>{{ @tplHistorySiteName }}</strong</h2>
             <table class="uk-table uk-table-divider">
                 <repeat group="{{ @tplHistoryData }}" value="{{ @line }}">
                     <tr>

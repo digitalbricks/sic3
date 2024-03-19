@@ -105,8 +105,12 @@ body.history {
     background-color: #fff;
 }
 .history-container{
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-bottom: 1.5rem;
+}
+.history__header{
+    padding: 1.5rem 0;
+    background-color: var(--sic-theme-card);
+    border-bottom: 1px solid var(--sic-theme-primary);
 }
 
 main{

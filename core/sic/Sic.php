@@ -786,7 +786,7 @@ class Sic {
      *
      * @return array|false Response from given URL and statuscode or false
      */
-    public function sendPostRequest($url,$data){
+    private function sendPostRequest($url,$data){
         if(function_exists(('curl_version'))){
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //causes no output without echo
@@ -1346,5 +1346,27 @@ class Sic {
      */
     public function getRootPath(){
         return $this->rootPath;
+    }
+
+    /**
+     * @param  int $id site id
+     * @return string|false string, false if failed
+     */
+    public function getSatellitePhpinfo(int $id){
+        if(array_key_exists($id,$this->activeSites)){
+            // set payload and url for request
+            $payload = array(
+                'sys' => $this->activeSites[$id]['sys'],
+                'secret' => $this->activeSites[$id]['secret'],
+                'action' => 'PHPINFO'
+            );
+            $url = $this->activeSites[$id]['url'];
+            $response = $this->sendPostRequest($url.'/phpinfo.php',$payload);
+            if(isset($response['statuscode']) && $response['statuscode'] == 200){
+                return $response['response'];
+            }
+            return false;
+        }
+        return false;
     }
 }

@@ -187,18 +187,10 @@ class SicRestApi{
             echo "Route not found";
             return;
         }
-        $url = $this->f3->get('sic')->getAllSites()[$siteId]['url'];
 
-        // set payload and url for request
-        $payload = array(
-            'sys' => $this->f3->get('sic')->getAllSites()[$siteId]['sys'],
-            'secret' => $this->f3->get('sic')->getAllSites()[$siteId]['secret'],
-            'action' => 'PHPINFO'
-        );
-
-        $response = $this->f3->get('sic')->sendPostRequest($url,$payload);
-        if(isset($response['statuscode']) && $response['statuscode'] == 200){
-            echo $response['response'];
+        $satPhpinfo = $this->f3->get('sic')->getSatellitePhpinfo($siteId);
+        if($satPhpinfo){
+            echo $satPhpinfo;
         }
 
         return;

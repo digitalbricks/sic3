@@ -26,10 +26,20 @@ Filter by CMS / system to get the information of all sites using the same Conten
 ![Filter](core/docs/screenshots/filter.gif)
 
 
-### Search sites
+### Search Sites
 Search for sites by name – very handy when managing a lot of sites or hostnames with a lot of subdomains.
 
 ![Search](core/docs/screenshots/search.gif)
+
+### Site History
+Each refresh of a site will be stored in a CSV file. SIC 3 will display the history of each site in a table. You can also download the history as CSV file.
+
+![History](core/docs/screenshots/history.jpg)
+
+### Site phpinfo()
+Request the phpinfo() of a site with one click. This is useful if you want to know more about the server configuration of a site. (available since SIC 3.1.0 & SIC Satellite 1.0.0)
+
+![Phpinfo](core/docs/screenshots/phpinfo.jpg)
 
 ### Manage Sites
 Active, inactive, edit, delete, add new sites – all in one place. No need to edit config files anymore.

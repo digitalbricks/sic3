@@ -219,7 +219,7 @@ class SicUiViews{
 
         // load help texts and convert to html
         $md = \Markdown::instance();
-        $root = $this->f3->get('ROOT');
+        $root = $this->f3->get('sic')->getRootPath();
         $docFile = F3::instance()->read($root.'/core/docs/satellite-setup.md');
         $satSetupHtml = $md->convert($docFile);
 
@@ -342,7 +342,7 @@ class SicUiViews{
 
         // load help texts and convert to html
         $md = \Markdown::instance();
-        $root = $this->f3->get('ROOT');
+        $root = $this->f3->get('sic')->getRootPath();
         $docFile = F3::instance()->read($root.'/core/docs/satellite-setup.md');
         $satSetupHtml = $md->convert($docFile);
 
@@ -698,7 +698,7 @@ class SicUiViews{
 
     public function infoRouteGet(){
         $this->f3->get('sic')->checkLogin(true);
-        $root = $this->f3->get('ROOT');
+        $root = $this->f3->get('sic')->getRootPath();
 
         $md = \Markdown::instance();
 

@@ -1,4 +1,8 @@
 <?php
+
+/**
+ *
+ */
 class Sic {
 
     private $f3;
@@ -1334,5 +1338,13 @@ class Sic {
             $string .= "-";
         }
         return mb_substr($string, 0, -1);
+    }
+
+    /**
+     * Returns the root path of the SIC
+     * @return string
+     */
+    public function getRootPath(){
+        return $this->rootPath;
     }
 }

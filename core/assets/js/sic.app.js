@@ -12,7 +12,7 @@ const endpoints = "api/v1/sites/";
 const siclight = Vue.createApp({
     data() {
         return {
-            sicVersion: '3.0.0',
+            sicVersion: '3.0.1',
             configFileExists: true, // NOTE: we start with 'true' in order to prevent error message to "flicker" on page load
             activeSites: {},
             inactiveSites: {},
@@ -234,6 +234,9 @@ const siclight = Vue.createApp({
                             // getting URL to history CSV file
                             var history = response.data.history;
 
+                            // getting URL to phpinfo()
+                            var satPhpinfo = response.data.satPhpinfo;
+
                             // update data
                             this.activeSites[id].sys_ver = satdata.sys_ver;
                             this.activeSites[id].php_ver = satdata.php_ver;
@@ -241,6 +244,7 @@ const siclight = Vue.createApp({
                             this.activeSites[id].date = date;
                             this.activeSites[id].time = time;
                             this.activeSites[id].history = history;
+                            this.activeSites[id].satPhpinfo = satPhpinfo;
 
                             // remove '.refreshing' class from row
                             this.activeSites[id].state = "";

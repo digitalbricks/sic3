@@ -190,6 +190,11 @@ class SicRestApi{
 
         $satPhpinfo = $this->f3->get('sic')->getSatellitePhpinfo($siteId);
         if($satPhpinfo){
+            // prevent browser caching of HTML output
+            header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+            header("Cache-Control: post-check=0, pre-check=0", false);
+            header("Pragma: no-cache");
+            
             echo $satPhpinfo;
         }
 

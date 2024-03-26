@@ -87,6 +87,9 @@ em{
 .uk-modal-dialog{
     background-color: var(--sic-theme-card);
 }
+.uk-modal-footer{
+    background-color: var(--sic-theme-card);
+}
 
 .uk-lightbox{
     background-color: rgba(0,0,0,0.8);

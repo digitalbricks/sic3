@@ -12,8 +12,12 @@ class SicUpdate{
         $this->latestVersion = $this->getVersionNumberFromGithub();
     }
 
-    public function updateCheckRouteGet($f3){
-        $installedVersion = $f3->get('tplSicVersion');
+    /**
+     * Renders JSON for route /updates/check
+     * @return string
+     */
+    public function updateCheckRouteGet(){
+        $installedVersion = $this->f3->get('tplSicVersion');
         $latestVersion = $this->latestVersion;
         $updateUrl = '';
 

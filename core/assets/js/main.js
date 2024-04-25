@@ -4,6 +4,7 @@ checkDarkmode();
 listenRevealPasswordToggle();
 listenSiteDelete();
 listenUserDelete();
+checkForUpdates();
 
 
 /**
@@ -169,12 +170,17 @@ function uiKitCornfirmDeleteDialog(headline, entityname, message, url, formdata)
  * Helper for creating a UIkit notification
  * in an uniform way.
  */
-function notify(status='success', message='message') {
+function notify(
+    status='success',
+    message='message',
+    pos='top-right',
+    timeout=5000
+){
     UIkit.notification({
         message: message,
         status: status,
-        pos: 'top-right',
-        timeout: 5000
+        pos: pos,
+        timeout: timeout
     });
 }
 
@@ -206,3 +212,37 @@ function copyToClipboard(id) {
     );
 }
 
+/**
+ * Function to check for updates on page load
+ * and show a notification if a new version is available.
+ * The notification is only shown once per session.
+ */
+function checkForUpdates(){
+    let updateNotificationShown = sessionStorage['updateNotificationShown'];
+    let request = new XMLHttpRequest();
+    request.open("GET", "/update/check");
+    request.send();
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let response = JSON.parse(this.responseText);
+
+            // show notification if new version is available and not already shown
+            if(response.updateAvailable && updateNotificationShown != 'true'){
+                let message = '<strong>A new version of SIC is available!</strong><br>';
+                message += 'Version: <strong>' + response.latestVersion + '</strong> is available on GitHub.<br>';
+                message += 'Your current version: ' + response.installedVersion + '<br>';
+                notify(
+                    'sic-update',
+                    message,
+                    'bottom-left',
+                    10000
+                );
+                sessionStorage['updateNotificationShown'] = 'true';
+            }
+
+            // store latest version and update url in session storage
+            sessionStorage['updateLatestVersionAvailable'] = response.latestVersion;
+            sessionStorage['updateUrl'] = response.updateUrl;
+        }
+    };
+}

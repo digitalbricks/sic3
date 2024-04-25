@@ -55,7 +55,7 @@ $f3->route('GET /api/v1/phpinfo/@siteId','SicRestApi->apiV1PhpInfoRouteGet');
 $f3->route('GET /tests','SicTests->doTests');
 
 // UPDATE routes
-$f3->route('GET /updates/check','SicUpdate->updateCheckRouteGet');
+$f3->route('GET /update/check','SicUpdate->updateCheckRouteGet');
 
 
 

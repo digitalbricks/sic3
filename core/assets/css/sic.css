@@ -96,6 +96,10 @@ em{
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
 }
+.uk-notification-message-sic-update{
+    font-size: 1rem;
+    border: 2px solid var(--sic-theme-primary);
+}
 
 html {
     background-color: var(--sic-theme-background);

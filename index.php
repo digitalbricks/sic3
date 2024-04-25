@@ -54,6 +54,10 @@ $f3->route('GET /api/v1/phpinfo/@siteId','SicRestApi->apiV1PhpInfoRouteGet');
 // TESTS route
 $f3->route('GET /tests','SicTests->doTests');
 
+// UPDATE routes
+$f3->route('GET /updates/check','SicUpdate->updateCheckRouteGet');
+
+
 
 // execute Fat-Free Framework
 $f3->run();

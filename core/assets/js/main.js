@@ -224,6 +224,9 @@ function checkForUpdates(){
     request.open("GET", "/update/check");
     request.send();
     request.onreadystatechange = function() {
+        let updateAvailable = false;
+        let updateLatestVersionAvailable = null;
+        let updateUrl = null;
         if (this.readyState == 4 && this.status == 200) {
             let response = JSON.parse(this.responseText);
 
@@ -241,11 +244,16 @@ function checkForUpdates(){
                 sessionStorage['updateNotificationShown'] = 'true';
             }
 
-            // store latest version and update url in session storage
-            sessionStorage['updateLatestVersionAvailable'] = response.latestVersion;
-            sessionStorage['updateUrl'] = response.updateUrl;
+            updateAvailable = response.updateAvailable;
+            updateLatestVersionAvailable = response.latestVersion;
+            updateUrl = response.updateUrl;
         }
+        // store latest version and update url in session storage
+        sessionStorage['updateAvailable'] = updateAvailable;
+        sessionStorage['updateLatestVersionAvailable'] = updateLatestVersionAvailable;
+        sessionStorage['updateUrl'] = updateUrl;
     };
+
 }
 
 /**
@@ -255,8 +263,9 @@ function checkForUpdates(){
 function addUpdateNote(){
     let updateNotification = document.querySelector('.update-info');
     let latestVersion = sessionStorage['updateLatestVersionAvailable'];
+    let updateAvailable = sessionStorage['updateAvailable'];
     let updateUrl = sessionStorage['updateUrl'];
-    if(updateNotification && latestVersion){
+    if(updateNotification && updateAvailable != 'false' && latestVersion && updateUrl){
         let message = '<a href="' + updateUrl + '">SIC <strong>' + latestVersion + '</strong> available.</span></a>';
         updateNotification.innerHTML = message;
     }

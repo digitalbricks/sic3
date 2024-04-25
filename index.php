@@ -56,6 +56,7 @@ $f3->route('GET /tests','SicTests->doTests');
 
 // UPDATE routes
 $f3->route('GET /update/check','SicUpdate->updateCheckRouteGet');
+$f3->route('GET /update','SicUpdate->updateInfoRouteGet');
 
 
 

@@ -1,5 +1,5 @@
 <?php
-class SicUpdate{
+class SicUpdate extends SicUiViews{
     private $f3;
     private $githubUrl = "https://raw.githubusercontent.com/digitalbricks/sic3/main/core/init.php";
     private $cacheFilePath;
@@ -10,6 +10,7 @@ class SicUpdate{
         $this->f3 = $f3;
         $this->cacheFilePath = realpath(__DIR__).'/../../'.$f3->get('TEMP').'/update-init.php.txt';
         $this->latestVersion = $this->getVersionNumberFromGithub();
+        parent::__construct($f3);
     }
 
     /**
@@ -34,7 +35,26 @@ class SicUpdate{
         );
         header('Content-Type: application/json');
         echo json_encode($json);
+        return true;
     }
+
+    public function updateInfoRouteGet(){
+        $this->f3->get('sic')->checkLogin(true);
+        $installedVersion = $this->f3->get('tplSicVersion');
+        $latestVersion = $this->latestVersion;
+        $updateAvailable = version_compare($installedVersion, $latestVersion, '<');
+
+        $this->f3->set('tplInstalledVersion', $installedVersion);
+        $this->f3->set('tplLatestVersion', $latestVersion);
+        $this->f3->set('tplUpdateAvailable', $updateAvailable);
+
+        $this->f3->set('tplPagetitle','SIC Update');
+        $this->f3->set('tplPartial','core/views/update.html');
+        echo $this->f3->get('BASE');
+        echo \Template::instance()->render('core/views/_base.html');
+
+    }
+
 
     /**
      * Returns the version number of the latest SIC version from github

@@ -1,0 +1,59 @@
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <h2 class="uk-card-title">SIC Update</h2>
+    </div>
+    <div class="uk-card-body">
+        <div class="uk-grid" data-uk-grid>
+            <div class="uk-width-1-2@m">
+                <h3>Somewhen ...</h3>
+                <p>
+                    ...in the future there will be a way to update SIC from within the web interface.
+                    For now, you have to do it manually.
+                </p>
+
+                <check if="{{ @tplUpdateAvailable }}">
+                    <true>
+                        <a class="uk-button uk-button-primary" href="https://github.com/digitalbricks/sic3">
+                            <span data-uk-icon="github"></span> Latest Versionon GitHub
+                        </a>
+                    </true>
+                    <false>
+                        <div class="uk-alert-success" data-uk-alert>
+                            <p>No new version available, looks fine :-)</p>
+                        </div>
+                    </false>
+                </check>
+
+            </div>
+            <div class="uk-width-1-2@m">
+                <table class="uk-table uk-table-divider">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Installed Version:</th>
+                            <td>{{ @tplInstalledVersion }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Latest Version:</th>
+                            <td><strong>{{ @tplLatestVersion }}</strong></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Satus:</th>
+                            <td>
+                                <check if="{{ @tplUpdateAvailable }}">
+                                    <true>
+                                        <span data-uk-icon="warning"></span> on outdated version
+                                    </true>
+                                    <false>
+                                        <span data-uk-icon="check"> on current version
+                                    </false>
+                                </check>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>

@@ -5,6 +5,7 @@ listenRevealPasswordToggle();
 listenSiteDelete();
 listenUserDelete();
 checkForUpdates();
+addUpdateNote();
 
 
 /**
@@ -218,7 +219,6 @@ function copyToClipboard(id) {
  * The notification is only shown once per session.
  */
 function checkForUpdates(){
-    addUpdateNote();
     let updateNotificationShown = sessionStorage['updateNotificationShown'];
     let request = new XMLHttpRequest();
     request.open("GET", "/update/check");
@@ -257,7 +257,7 @@ function addUpdateNote(){
     let latestVersion = sessionStorage['updateLatestVersionAvailable'];
     let updateUrl = sessionStorage['updateUrl'];
     if(updateNotification && latestVersion){
-        let message = '<a href="' + updateUrl + '" target="_blank">SIC <strong>' + latestVersion + '</strong> available.</span></a>';
+        let message = '<a href="' + updateUrl + '">SIC <strong>' + latestVersion + '</strong> available.</span></a>';
         updateNotification.innerHTML = message;
     }
 }

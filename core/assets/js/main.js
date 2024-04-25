@@ -218,6 +218,7 @@ function copyToClipboard(id) {
  * The notification is only shown once per session.
  */
 function checkForUpdates(){
+    addUpdateNote();
     let updateNotificationShown = sessionStorage['updateNotificationShown'];
     let request = new XMLHttpRequest();
     request.open("GET", "/update/check");
@@ -245,4 +246,18 @@ function checkForUpdates(){
             sessionStorage['updateUrl'] = response.updateUrl;
         }
     };
+}
+
+/**
+ * Function to add the update notification to the UI (_base.html),
+ * updating the HTML of .update-notification.
+ */
+function addUpdateNote(){
+    let updateNotification = document.querySelector('.update-info');
+    let latestVersion = sessionStorage['updateLatestVersionAvailable'];
+    let updateUrl = sessionStorage['updateUrl'];
+    if(updateNotification && latestVersion){
+        let message = '<a href="' + updateUrl + '" target="_blank">SIC <strong>' + latestVersion + '</strong> available.</span></a>';
+        updateNotification.innerHTML = message;
+    }
 }

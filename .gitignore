@@ -8,3 +8,4 @@ history/*.csv
 tests
 .DS_Store
 /core/test/tmp/
+/.ddev/

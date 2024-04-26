@@ -675,16 +675,18 @@ html {
     font-family: monospace !important;
     margin-top: 2rem;
     padding: 1rem;
-    height: 500px;
+    height: 400px;
     overflow-y: scroll;
     resize: vertical;
-    background-color: var(--sic-theme-primary);
-    border: 2px solid var(--sic-theme-secondary);
+    background-color: var(--sic-theme-background);
+    border: 2px solid var(--sic-theme-primary);
+    color: var(--sic-theme-text);
 }
 .changelog h1,
 .changelog h2,
 .changelog h3,
 .changelog h4{
+    color: var(--sic-theme-text);
     font-family: monospace !important;
 }
 .changelog h1{

@@ -671,6 +671,32 @@ html {
     color: #f0506e;
 }
 
+.changelog{
+    font-family: monospace !important;
+    margin-top: 2rem;
+    padding: 1rem;
+    height: 500px;
+    overflow-y: scroll;
+    resize: vertical;
+    background-color: var(--sic-theme-primary);
+    border: 2px solid var(--sic-theme-secondary);
+}
+.changelog h1,
+.changelog h2,
+.changelog h3,
+.changelog h4{
+    font-family: monospace !important;
+}
+.changelog h1{
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+.changelog h1,
+.changelog h2,
+.changelog h3{
+    font-size: 1.2rem;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;

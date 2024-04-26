@@ -2,6 +2,7 @@
 class SicUpdate extends SicUiViews{
     private $f3;
     private $githubInitUrl = "https://raw.githubusercontent.com/digitalbricks/sic3/main/core/init.php";
+    private $githubChangelogUrl = 'https://raw.githubusercontent.com/digitalbricks/sic3/main/CHANGELOG.md';
     private $cacheDuration = 86400; // in seconds
     private $latestVersion = null;
     public function __construct($f3) {
@@ -41,6 +42,12 @@ class SicUpdate extends SicUiViews{
         $latestVersion = $this->latestVersion;
         $updateAvailable = version_compare($installedVersion, $latestVersion, '<');
 
+        // download changelog file and convert markdown to html
+        $changelogFileinfo = $this->f3->get('sic')->downloadFile($this->githubChangelogUrl, 'latest-sic-changelog.md', 3600);
+        $md = \Markdown::instance();
+        $changelogHtml = $md->convert($changelogFileinfo['filecontent']);
+
+        $this->f3->set('tplChangelogHtml', $changelogHtml);
         $this->f3->set('tplInstalledVersion', $installedVersion);
         $this->f3->set('tplLatestVersion', $latestVersion);
         $this->f3->set('tplUpdateAvailable', $updateAvailable);

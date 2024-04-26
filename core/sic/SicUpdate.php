@@ -62,7 +62,8 @@ class SicUpdate extends SicUiViews{
         $cacheLimit = time() - $this->cacheDuration;
 
         // download the file if it doesn't exist or is older than cacheDuration
-        $fileContent = $this->f3->get('sic')->downloadFile($this->githubInitUrl, 'latest-sic-init.php', 0);
+        $fileDownload = $this->f3->get('sic')->downloadFile($this->githubInitUrl, 'latest-sic-init.php', 3600);
+        $fileContent = $fileDownload['filecontent'];
 
         // Regular expression to match the version number
         $pattern = "/'tplSicVersion',\s*'([\d\.]+)'/";

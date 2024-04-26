@@ -1380,7 +1380,7 @@ class Sic {
      * @param string $url
      * @param string $localFilePath
      * @param int $cacheDuration
-     * @return false|string
+     * @return false|array
      */
     public function downloadFile(string $url, string $localFilename, int $cacheDuration = 60){
 
@@ -1401,10 +1401,22 @@ class Sic {
             $file = fopen($cacheFilePath, "w+");
             fputs($file, $data);
             fclose($file);
+
+            // check if downloaded file is in place
+            if(!file_exists($cacheFilePath)){
+                return false;
+            }
         }
 
-        // get the version number from the downloaded file
-        $fileContent = file_get_contents($cacheFilePath);
-        return $fileContent;
+
+
+        $filedata = array(
+            'filemtime' => filemtime($cacheFilePath),
+            'filesize' => filesize($cacheFilePath),
+            'cacheDuration' => $cacheDuration,
+            'cacheExpires' => filemtime($cacheFilePath) + $cacheDuration,
+            'filecontent' => file_get_contents($cacheFilePath)
+        );
+        return $filedata;
     }
 }

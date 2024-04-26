@@ -20,6 +20,7 @@ class Sic {
     private $userIsAdmin = false;
     private $user = array();
     private $satelliteResponse = false;
+    private $cache = false;
 
     /**
      * @param Base $f3
@@ -34,6 +35,9 @@ class Sic {
 
         // read summary file (has to be called before bootstapSite())
         $this->summary = $this->getSummaryFromFile();
+
+        // instantiate F3 cache
+        $this->cache = \Cache::instance();
 
         $this->bootstrapUsers();
         $this->bootstrapSites();
@@ -1368,5 +1372,39 @@ class Sic {
             return false;
         }
         return false;
+    }
+
+
+    /**
+     * Downloads a file from a given URL and caches it for a given time
+     * @param string $url
+     * @param string $localFilePath
+     * @param int $cacheDuration
+     * @return false|string
+     */
+    public function downloadFile(string $url, string $localFilename, int $cacheDuration = 60){
+
+        $cacheLimit = time() - $cacheDuration;
+        $cacheDirectory = $this->rootPath.'/tmp/downloadcache';
+        if (!is_dir($cacheDirectory)) {
+            mkdir($cacheDirectory, 0777, true);
+        }
+        $cacheFilePath = $cacheDirectory.'/'.$localFilename;
+
+        // download the file if it doesn't exist or is older than cacheDuration
+        if(!file_exists($cacheFilePath) || filemtime($cacheFilePath) < $cacheLimit){
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+            curl_close($ch);
+
+            $file = fopen($cacheFilePath, "w+");
+            fputs($file, $data);
+            fclose($file);
+        }
+
+        // get the version number from the downloaded file
+        $fileContent = file_get_contents($cacheFilePath);
+        return $fileContent;
     }
 }

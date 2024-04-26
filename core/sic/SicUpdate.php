@@ -1,14 +1,11 @@
 <?php
 class SicUpdate extends SicUiViews{
     private $f3;
-    private $githubUrl = "https://raw.githubusercontent.com/digitalbricks/sic3/main/core/init.php";
-    private $cacheFilePath;
+    private $githubInitUrl = "https://raw.githubusercontent.com/digitalbricks/sic3/main/core/init.php";
     private $cacheDuration = 86400; // in seconds
-
     private $latestVersion = null;
     public function __construct($f3) {
         $this->f3 = $f3;
-        $this->cacheFilePath = realpath(__DIR__).'/../../'.$f3->get('TEMP').'/update-init.php.txt';
         $this->latestVersion = $this->getVersionNumberFromGithub();
         parent::__construct($f3);
     }
@@ -50,7 +47,6 @@ class SicUpdate extends SicUiViews{
 
         $this->f3->set('tplPagetitle','SIC Update');
         $this->f3->set('tplPartial','core/views/update.html');
-        echo $this->f3->get('BASE');
         echo \Template::instance()->render('core/views/_base.html');
 
     }
@@ -66,26 +62,13 @@ class SicUpdate extends SicUiViews{
         $cacheLimit = time() - $this->cacheDuration;
 
         // download the file if it doesn't exist or is older than cacheDuration
-        if(!file_exists($this->cacheFilePath) || filemtime($this->cacheFilePath) < $cacheLimit){
-            $ch = curl_init($this->githubUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $data = curl_exec($ch);
-            curl_close($ch);
-
-            $file = fopen($this->cacheFilePath, "w+");
-            fputs($file, $data);
-            fclose($file);
-        }
-
-        // get the version number from the downloaded file
-        $fileContent = file_get_contents($this->cacheFilePath);
+        $fileContent = $this->f3->get('sic')->downloadFile($this->githubInitUrl, 'latest-sic-init.php', 0);
 
         // Regular expression to match the version number
         $pattern = "/'tplSicVersion',\s*'([\d\.]+)'/";
 
         // Use preg_match to find the version number
         preg_match($pattern, $fileContent, $matches);
-
 
         $version = null;
         if (count($matches) > 1) {

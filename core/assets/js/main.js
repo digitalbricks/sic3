@@ -221,7 +221,7 @@ function copyToClipboard(id) {
 function checkForUpdates(){
     let updateNotificationShown = sessionStorage['updateNotificationShown'];
     let request = new XMLHttpRequest();
-    request.open("GET", "/update/check");
+    request.open("GET", BASE+"/update/check"); // NOTE: BASE is defined in _base.html
     request.send();
     request.onreadystatechange = function() {
         let updateAvailable = false;

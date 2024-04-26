@@ -4,8 +4,10 @@ class SicSatGen{
     private $f3;
     private $sic;
     private $githubUrl = "https://raw.githubusercontent.com/digitalbricks/sic-satellite/master/satellite.php";
-    private $cacheFilePath;
+    private $cacheFileName = "satellite.php";
     private $cacheDuration = 86400; // in seconds
+    private $satelliteFileInfo = null;
+    private $satelliteContent = null;
     private array $site;
 
     public function __construct(Base $f3, int $siteId)
@@ -15,35 +17,15 @@ class SicSatGen{
         if($siteId != 0){ // 0 = new, not-yet-existing site
             $this->site = $this->sic->getSite($siteId);
         }
-        $this->cacheFilePath = realpath(__DIR__).'/../../'.$f3->get('TEMP').'satellite.php.txt';
-        $this->downloadFromGithub();
-    }
-
-    
-    /**
-     * Downloads the satellite file from github and stores it in /temp
-     * until cacheDuration is reached.
-     * @return void
-     */
-    private function downloadFromGithub(){
-        $cacheLimit = time() - $this->cacheDuration;
-        if(!file_exists($this->cacheFilePath) || filemtime($this->cacheFilePath) < $cacheLimit){
-            $ch = curl_init($this->githubUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $data = curl_exec($ch);
-            curl_close($ch);
-
-            $file = fopen($this->cacheFilePath, "w+");
-            fputs($file, $data);
-            fclose($file);
-        }
+        $this->satelliteFileInfo = $this->sic->downloadFile($this->githubUrl, $this->cacheFileName, $this->cacheDuration);
+        $this->satelliteContent = $this->satelliteFileInfo['filecontent'];
     }
 
     
     /**
      * Loads settings for sat_contact and replaces the
      * placeholders in that file with the data configured for the current site
-     * @return void
+     * @return string
      */
     private function replacePlaceholder(){
         $secret = $this->site['secret'];
@@ -51,9 +33,9 @@ class SicSatGen{
         // prepend all lines with * for comment
         $sat_contact_prepared = preg_replace('/^/m', " * ", $sat_contact);
 
-        $satelliteContent = file_get_contents($this->cacheFilePath);
+        $satelliteContent = $this->satelliteContent;
         $replacedContent = str_replace('[YOUR_SECRET]',$secret,$satelliteContent);
-        // NOTE: we seach vor " * [YOUR_CONTACT_INFORMATION]" because we prepended all lines with * for comment
+        // NOTE: we search vor " * [YOUR_CONTACT_INFORMATION]" because we prepended all lines with * for comment
         $replacedContent = str_replace(' * [YOUR_CONTACT_INFORMATION]',$sat_contact_prepared,$replacedContent);
         return $replacedContent;
     }
@@ -75,12 +57,7 @@ class SicSatGen{
      */
     public function getCachedFileInfo(): array
     {
-        return [
-            'filemtime' => filemtime($this->cacheFilePath),
-            'filesize' => filesize($this->cacheFilePath),
-            'cacheDuration' => $this->cacheDuration,
-            'cacheExpires' => filemtime($this->cacheFilePath) + $this->cacheDuration
-        ];
+        return $this->satelliteFileInfo;
     }
 
     /**
@@ -89,7 +66,7 @@ class SicSatGen{
      * @return array
      */
     public function getAvailableSystemIdentifiers(){
-        $fileContent = file_get_contents($this->cacheFilePath);
+        $fileContent = $this->satelliteContent;
         $tokens = token_get_all($fileContent);
         $keyValuePairs = [];
         foreach ($tokens as $token) {

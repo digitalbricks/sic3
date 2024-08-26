@@ -1,6 +1,9 @@
 # SIC 3 changelog
 (since SIC 3.2.0)
 
+## 3.3.3, 26.08.2024
+* added very basic print stylesheet
+
 ## 3.3.2, 26.04.2024
 * improvements for SIC usage inside a subdirectory
 

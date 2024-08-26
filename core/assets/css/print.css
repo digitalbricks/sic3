@@ -1,0 +1,27 @@
+html,body{
+    font-size: 9pt !important;
+}
+html{
+    min-height: auto;
+    border: none;
+}
+.menubar,
+.uk-close,
+.filter-and-search,
+.sites th:before,
+#sitesTable th:before,
+.uk-alert,
+.sites td .uk-icon,
+.datatable-top{
+    display: none !important;
+}
+#sic-ui-main .uk-table td, .uk-table th{
+    padding: 0.25em;
+}
+.uk-table.sites td,
+.uk-table.sites th,
+#sitesTable td,
+#sitesTable th{
+    font-size: 8pt !important;
+}
+

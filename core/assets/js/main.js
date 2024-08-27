@@ -251,7 +251,7 @@ function checkForUpdates(){
         // store latest version and update url in session storage
         sessionStorage['updateAvailable'] = updateAvailable;
         sessionStorage['updateLatestVersionAvailable'] = updateLatestVersionAvailable;
-        sessionStorage['updateUrl'] = updateUrl;
+        sessionStorage['updateUrl'] = BASE+updateUrl;
     };
 
 }

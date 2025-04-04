@@ -61,7 +61,7 @@ class SicUpdate extends SicUiViews{
 
     /**
      * Returns the version number of the latest SIC version from github
-     * by downloading the file and extracting the version number.
+     * by downloading the init.php file and extracting the version number.
      *
      * @return string
      */

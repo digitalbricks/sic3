@@ -1,6 +1,9 @@
 # SIC 3 changelog
 (since SIC 3.2.0)
 
+## 3.3.4, 04.04.2025
+* handling of cases where satellite does not answer with correct JSON (e.g. because of PHP errors)
+
 ## 3.3.3, 26.08.2024
 * added very basic print stylesheet
 

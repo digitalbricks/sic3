@@ -741,8 +741,21 @@ class Sic {
                     // check satellite version in response and set satPhpinfo url if >= 1.0.0
                     $response['satPhpinfo'] = false;
                     $resp_array = json_decode($response['response'], true);
-                    if(array_key_exists('sat_ver', $resp_array) && version_compare($resp_array['sat_ver'], '1.0.0', '>=')){
+                    if(is_array($resp_array) && array_key_exists('sat_ver', $resp_array) && version_compare($resp_array['sat_ver'], '1.0.0', '>=')){
                         $response['satPhpinfo'] = $this->getPhpInfoUrl($id);
+                    }
+
+                    // if we got no valid json response (json_decode did not result in array)
+                    // we return error message
+                    if(!is_array($resp_array)){
+                        $message = "Satellite hasn't answered JSON. ";
+                        $message.= "You can inspect the network tab of the browser dev console ";
+                        $message.= "to see the raw satellite response.";
+                        $response['statuscode'] = 503; // to show error message in frontent
+                        $response['message'] = $message;
+                        $response['id'] = $id;
+                        $response['name'] = $sitename;
+                        return $response;
                     }
 
                     // store response for later use

@@ -22,6 +22,9 @@ $f3->set('CACHE','TRUE');
 //   (CSRF token can be accessed using $f3->CSRF or via $session->csrf())
 $session = new Session(NULL,'CSRF');
 
+// - set debug mode (3 = show all errors, 0 = hide all errors)
+$f3->set('DEBUG',3);
+
 // - load SIC and set it in F3
 $f3->set('sic', new Sic($f3));
 

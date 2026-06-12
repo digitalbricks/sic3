@@ -24,19 +24,13 @@ class SicAddons {
         foreach ($this->addonNames as $addonName) {
             $controllerFile = $this->addonsDir . $addonName . '/' . $addonName . 'Controller.php';
             if (!file_exists($controllerFile)) continue;
-
             require_once($controllerFile);
-
-            $controllerClass = $addonName . 'Controller';
-            if (class_exists($controllerClass)) {
-                new $controllerClass();
-            }
         }
     }
 
     public function registerRoutes() {
         foreach ($this->addonNames as $addonName) {
-            $routesFile = $this->addonsDir . $addonName . '/routes.php';
+            $routesFile = $this->addonsDir . $addonName . '/' . $addonName . 'Routes.php';
             if (!file_exists($routesFile)) return;
 
             $routes = require($routesFile);
@@ -50,6 +44,8 @@ class SicAddons {
 
                 // register route in f3
                 $this->f3->route($route, $controllerParam);
+
+                $this->f3->route('GET /update2','SicUpdate->updateInfoRouteGet');
             }
 
         }

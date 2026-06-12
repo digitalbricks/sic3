@@ -71,9 +71,12 @@ $f3->route('GET /update','SicUpdate->updateInfoRouteGet');
  * @since 3.4.0
  */
 $sicAddons->loadControllers();
-/* TODO: Get the modified routes out of the SicAddons class */
-//$f3 = $sicAddons->getF3();
-$f3->route('GET /helloworld','HelloworldController->index');
+$sicAddons->registerRoutes();
+
+/*echo "<pre>";
+$routes = $f3->get('ROUTES');
+print_r($routes);
+echo "</pre>";*/
 
 
 

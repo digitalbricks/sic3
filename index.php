@@ -1,6 +1,12 @@
 <?php
 require_once 'core/init.php';
+/**
+ * @var Base $f3 instance of the Fat-Free Framework
+ * @var SicAddons $sicAddons
+ */
 
+
+// -- START CORE ROUTES ----------------------
 // SIC UI index route
 $f3->route('GET /','SicUiViews->indexRouteGet');
 
@@ -57,6 +63,18 @@ $f3->route('GET /tests','SicTests->doTests');
 // UPDATE routes
 $f3->route('GET /update/check','SicUpdate->updateCheckRouteGet');
 $f3->route('GET /update','SicUpdate->updateInfoRouteGet');
+
+// -- END CORE ROUTES ------------------------
+
+/**
+ * load addons and register their routes
+ * @since 3.4.0
+ */
+$sicAddons->loadControllers();
+/* TODO: Get the modified routes out of the SicAddons class */
+//$f3 = $sicAddons->getF3();
+$f3->route('GET /helloworld','HelloworldController->index');
+
 
 
 

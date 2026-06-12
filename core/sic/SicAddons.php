@@ -42,10 +42,28 @@ class SicAddons {
                 // create second route() parameter for the controller method, e.g. HelloworldController->index
                 $controllerParam = "{$addonName}Controller->{$method}";
 
-                // register route in f3
-                $this->f3->route($route, $controllerParam);
+                /*
+                 * In order to prevent addons to override core routes, we need to prefix each route with /addon/addonname.
+                 * Therefore we have to split the route defintion (e.g. 'GET /helloworld') into method and path, and then
+                 * add the prefix to the path.
+                 */
+                $routeParts = explode(' ', $route);
+                if (count($routeParts) != 2) continue; // invalid route definition, skip
+                $addonSegment = "/addon/".strtolower($addonName);
+                $httpMethod = $routeParts[0];
+                $routePath = $routeParts[1];
+                if($routePath == "/"){
+                    // if the route is just '/', we don't want to add another '/' in between,
+                    // so we skip the slash in the addon segment – leading to /addon/addonname
+                    $routePath = $addonSegment;
+                    $routeParam = $httpMethod." ".$routePath;
+                } else {
+                    $routePath = $addonSegment.$routePath;
+                    $routeParam = $httpMethod." ".$routePath;
+                }
 
-                $this->f3->route('GET /update2','SicUpdate->updateInfoRouteGet');
+                // register route in f3
+                $this->f3->route($httpMethod." ".$routePath, $controllerParam);
             }
 
         }

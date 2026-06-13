@@ -3,11 +3,14 @@
 class SicAddons {
 
     private $f3 = null;
+
+    private $userIsAdmin = false;
     private string $addonsDir = '';
-    private array $addonNames = [];
+    private array $addons = [];
 
     function __construct($f3) {
         $this->f3 = $f3;
+        $this->userIsAdmin = $this->f3->get('userIsAdmin');
 
         $this->addonsDir = dirname(__FILE__) . '/../../addons/';
         if (!is_dir($this->addonsDir)) return;
@@ -15,28 +18,46 @@ class SicAddons {
         foreach (scandir($this->addonsDir) as $folder) {
             if ($folder === '.' || $folder === '..') continue;
             if (is_dir($this->addonsDir . $folder . '/')) {
-                $this->addonNames[] = $folder;
+                $this->addons[] = $folder;
             }
         }
     }
 
-    public function loadControllers() {
-        foreach ($this->addonNames as $addonName) {
-            $controllerFile = $this->addonsDir . $addonName . '/' . $addonName . 'Controller.php';
+    public function initialize(){
+        // intialize addons only of user is logged in
+        if(!$this->f3->get('sic')->checkLogin(false)){return;}
+        foreach ($this->addons as $addonName) {
+
+            // 1. load addon controller
+            $controllerName = $addonName . 'Controller';
+            $controllerFile = $this->addonsDir . $addonName . '/' . $controllerName . '.php';
             if (!file_exists($controllerFile)) continue;
             require_once($controllerFile);
-        }
-    }
 
-    public function registerRoutes() {
-        foreach ($this->addonNames as $addonName) {
-            $routesFile = $this->addonsDir . $addonName . '/' . $addonName . 'Routes.php';
-            if (!file_exists($routesFile)) return;
+            // get module info
+            if(class_exists($controllerName)){
+                $moduleinfo = $controllerName::getAddonInfo();
+                if(array_key_exists('adminOnly', $moduleinfo) && $moduleinfo['adminOnly'] && !$this->userIsAdmin){
+                    continue; // addon is only for admins, but user is no admin, skip addon
+                }
+            } else {
+                continue; // controller class not found, skip addon
+            }
 
-            $routes = require($routesFile);
+            // store module info in $this->addonNames
+            $this->addons[$addonName] = $moduleinfo;
+
+
+
+            // 2. register addon routes
+            $routes = array();
+            if(array_key_exists('routes', $moduleinfo) && $moduleinfo['routes']){
+                $routes = $moduleinfo['routes'];
+            }
 
             // create f3 routes definition based on the returned array from the routes file
-            // echo array entry looks like this: 'GET /helloworld' => 'index', which means [Addonname]Controller->index
+            // echo array entry looks like this: 'GET /helloworld' => 'index',
+            // which translates to $f3->route('GET /helloworld', '[Addonname]Controller->index')
             foreach ($routes as $route => $method) {
 
                 // create second route() parameter for the controller method, e.g. HelloworldController->index
@@ -65,11 +86,11 @@ class SicAddons {
                 // register route in f3
                 $this->f3->route($httpMethod." ".$routePath, $controllerParam);
             }
-
         }
     }
 
-    public function getF3() {
-        return $this->f3;
+    public function getAddons(): array {
+        return $this->addons;
     }
+
 }

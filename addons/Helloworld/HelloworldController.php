@@ -12,6 +12,13 @@ class HelloworldController extends SicAddon {
             'description' => 'A simple addon to demonstrate how to create addons for Site Information Center.',
             'version' => '1.0',
             'author' => 'Your Name',
+            'license' => 'MIT',
+            'adminOnly' => false,
+            'routes' => array(
+                'GET /' => 'index',             // means: Route /helloworld | Controller: HelloworldController->index
+                'GET /test' => 'test',         // means: Route /helloworld/test | Controller: HelloworldController->index
+                'GET /hello/@name' => 'hello',  // means: Route /helloworld/hello/[variable] | Controller: HelloworldController->hello
+            )
         );
     }
 
@@ -29,6 +36,9 @@ class HelloworldController extends SicAddon {
      */
     public function test() {
         echo "<h1>This is a test</h1>";
+        /*TODO: Make rendering views working*/
+        var_dump($this->renderView('helloworld/views/test.html'));
+        echo $this->renderView('helloworld/views/test.html');
     }
 
     /**

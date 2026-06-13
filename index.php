@@ -70,8 +70,8 @@ $f3->route('GET /update','SicUpdate->updateInfoRouteGet');
  * load addons and register their routes
  * @since 3.4.0
  */
-$sicAddons->loadControllers();
-$sicAddons->registerRoutes();
+$sicAddons->initialize();
+
 
 /*echo "<pre>";
 $routes = $f3->get('ROUTES');

@@ -31,4 +31,14 @@ class SicAddon {
     }
 
 
+    public function getFilePath(): string {
+        return (new \ReflectionClass(static::class))->getFileName();
+    }
+
+    public function getDirectory(): string {
+        $reflection = new \ReflectionClass(static::class);
+        return dirname($reflection->getFileName());
+    }
+
+
 }

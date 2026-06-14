@@ -17,6 +17,10 @@ class SicAddons {
 
         foreach (scandir($this->addonsDir) as $folder) {
             if ($folder === '.' || $folder === '..') continue;
+
+            // skip directories that start with a dot (assuming disabled addons, e.g. .Helloworld)
+            if(strpos($folder, '.') === 0) continue;
+
             if (is_dir($this->addonsDir . $folder . '/')) {
                 $this->addons[] = $folder;
             }

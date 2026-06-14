@@ -35,6 +35,12 @@ class SicAddons {
     public function initialize(){
         // intialize addons only of user is logged in
         if(!$this->f3->get('sic')->checkLogin(false)){return;}
+
+        // get addon menu entries from f3 (if any)
+        // doing it here, outside the loop prevents issues with unset variables in case of no active addons
+        // or addons without menu entries
+        $addonMenuEntries = $this->f3->get('addonMenuEntries');
+
         foreach ($this->addons as $addonName) {
 
             // ## 1. load addon controller and get addon info
@@ -99,17 +105,16 @@ class SicAddons {
 
 
             // ## 3. collect addon menu entries
-            $addonMenuEntries = $this->f3->get('addonMenuEntries');
-            if(is_null($addonMenuEntries) || !is_string($addonMenuEntries)){;
+            if(!isset($addonMenuEntries) || is_null($addonMenuEntries) || !is_array($addonMenuEntries)){;
                 $addonMenuEntries = array();
             }
 
             if(array_key_exists('menuEntry', $moduleinfo) && $moduleinfo['menuEntry']){
                 $addonMenuEntries[] = $moduleinfo['menuEntry'];
             }
-            $this->f3->set('addonMenuEntries', $addonMenuEntries);
-
         }
+        // store addon menu entries in f3 variable for later use in the UI
+        $this->f3->set('addonMenuEntries', $addonMenuEntries);
     }
 
     public function getAddons(): array {

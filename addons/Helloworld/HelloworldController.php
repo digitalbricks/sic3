@@ -15,15 +15,20 @@ class HelloworldController extends SicAddon {
             'license' => 'MIT',
             'adminOnly' => false,
             'routes' => array(
-                'GET /' => 'index',             // means: Route /helloworld | Controller: HelloworldController->index
-                'GET /test' => 'test',         // means: Route /helloworld/test | Controller: HelloworldController->index
-                'GET /hello/@name' => 'hello',  // means: Route /helloworld/hello/[variable] | Controller: HelloworldController->hello
+                'GET /' => 'index',             // means: Route /addon/helloworld | Controller: HelloworldController->index
+                'GET /test' => 'test',          // means: Route /addon/helloworld/test | Controller: HelloworldController->index
+                'GET /hello/@name' => 'hello',  // means: Route /addon/helloworld/hello/[variable] | Controller: HelloworldController->hello
+            ),
+            'menuEntry' => array(               // optional: if provided, the addon will be listed in the sidebar menu
+                'title' => 'Hello World',       // title of the menu entry
+                'icon' => 'happy',              // name of a UIkit Icon (https://getuikit.com/docs/icon)
+                'href' => 'addon/helloworld/test'   // href for the menu entry (addon/[addonname][route]) or external url
             )
         );
     }
 
     /**
-     * This is the method called when the route /addon/helloworld is called,
+     * This is the method called when the route /addons/helloworld is called,
      * as defined in HelloworldController.php
      */
     public function index() {

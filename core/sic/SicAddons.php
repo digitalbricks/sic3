@@ -27,12 +27,17 @@ class SicAddons {
         }
     }
 
+    /**
+     * Initializes addons by loading their controllers, getting their info and registering their routes
+     *
+     * @return void
+     */
     public function initialize(){
         // intialize addons only of user is logged in
         if(!$this->f3->get('sic')->checkLogin(false)){return;}
         foreach ($this->addons as $addonName) {
 
-            // 1. load addon controller
+            // ## 1. load addon controller and get addon info
             $controllerName = $addonName . 'Controller';
             $controllerFile = $this->addonsDir . $addonName . '/' . $controllerName . '.php';
             if (!file_exists($controllerFile)) continue;
@@ -53,7 +58,7 @@ class SicAddons {
 
 
 
-            // 2. register addon routes
+            // ## 2. register addon routes
             $routes = array();
             if(array_key_exists('routes', $moduleinfo) && $moduleinfo['routes']){
                 $routes = $moduleinfo['routes'];
@@ -90,6 +95,20 @@ class SicAddons {
                 // register route in f3
                 $this->f3->route($httpMethod." ".$routePath, $controllerParam);
             }
+
+
+
+            // ## 3. collect addon menu entries
+            $addonMenuEntries = $this->f3->get('addonMenuEntries');
+            if(is_null($addonMenuEntries) || !is_string($addonMenuEntries)){;
+                $addonMenuEntries = array();
+            }
+
+            if(array_key_exists('menuEntry', $moduleinfo) && $moduleinfo['menuEntry']){
+                $addonMenuEntries[] = $moduleinfo['menuEntry'];
+            }
+            $this->f3->set('addonMenuEntries', $addonMenuEntries);
+
         }
     }
 

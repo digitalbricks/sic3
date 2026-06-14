@@ -46,16 +46,7 @@ class SicAddon {
             $this->f3->set('tplDarkmodeClass','darkmode');
         };
 
-        // - 2. first url segment for navigation highlighting
-        $requestpath = $this->f3->get('PARAMS.0');
-        $segments = explode('/',$requestpath);
-        $firstUrlSegment = '';
-        if(array_key_exists(1,$segments)){
-            $firstUrlSegment = $segments[1];
-        }
-        $this->f3->set('firstUrlSegment',$firstUrlSegment);
-
-        // - 3. enqueued message (blank on addon pages)
+        // - 2. enqueued message (blank on addon pages)
         $this->f3->set('tplEnqueuedMessages',$this->getEnqueuedMessages());
 
 

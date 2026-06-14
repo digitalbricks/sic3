@@ -15,14 +15,6 @@ class SicUiViews{
             $this->f3->set('tplDarkmodeClass','darkmode');
         };
 
-        // set first url segment (used for highlighting menu items)
-        $requestpath = $this->f3->get('PARAMS.0');
-        $segments = explode('/',$requestpath);
-        $firstUrlSegment = '';
-        if(array_key_exists(1,$segments)){
-            $firstUrlSegment = $segments[1];
-        }
-        $this->f3->set('firstUrlSegment',$firstUrlSegment);
 
         // get enqueued messages from session and set them to template variable
         $this->f3->set('tplEnqueuedMessages',$this->getEnqueuedMessages());

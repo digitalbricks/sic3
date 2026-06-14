@@ -17,7 +17,6 @@ class SicTests extends Sic{
         $this->f3->set('tplPagetitle','');
         $this->f3->set('tplPartial','');
         $this->f3->set('tplDarkmodeClass','');
-        $this->f3->set('firstUrlSegment','');
         $this->f3->set('tplEnqueuedMessages','');
 
     }

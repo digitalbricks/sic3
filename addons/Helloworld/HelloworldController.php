@@ -35,11 +35,13 @@ class HelloworldController extends SicAddon {
      * as defined in HelloworldController.php
      */
     public function test() {
-        echo "<h1>This is a test</h1>";
-        echo $this->getDirectory();
-        /*TODO: Make rendering views working*/
-        var_dump($this->renderView('helloworld/views/test.html'));
-        echo $this->renderView('helloworld/views/test.html');
+        $data = array(
+            'tplPagetitle' => 'Test page Helloworld Addon',                 // base layout variable
+            'tplHeadline' => 'A simple test page for the Helloworld addon', // base layout variable
+            'hwVar1' => 'Demo variable 1',                                  // addon specific variable for view
+            'hwVar2' => date('Y-m-d H:i:s')                          // addon specific variable for view
+        );
+        echo $this->renderView('test.html', $data);
     }
 
     /**

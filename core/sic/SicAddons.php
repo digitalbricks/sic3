@@ -21,6 +21,9 @@ class SicAddons {
             // skip directories that start with a dot (assuming disabled addons, e.g. .Helloworld)
             if(strpos($folder, '.') === 0) continue;
 
+            // skip directories that ends with a underscore (assuming disabled addons, e.g. Helloworld_)
+            if(strpos($folder, '_') === strlen($folder)-1) continue;
+
             if (is_dir($this->addonsDir . $folder . DIRECTORY_SEPARATOR)) {
                 $this->addons[] = $folder;
             }
@@ -40,6 +43,9 @@ class SicAddons {
         // doing it here, outside the loop prevents issues with unset variables in case of no active addons
         // or addons without menu entries
         $addonMenuEntries = $this->f3->get('addonMenuEntries');
+        if(!is_array($addonMenuEntries)){
+            $addonMenuEntries = array(); // make sure it's an array, even if there are no menu entries yet
+        }
 
         foreach ($this->addons as $addonName) {
 

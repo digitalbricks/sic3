@@ -108,6 +108,37 @@
 
 
 
+{* addon menu items, since 3.4.0 *}
+<check if="{{ count(@addonMenuEntries) }}">
+    <div id="addonpanel" data-uk-offcanvas="flip: true">
+        <div class="uk-offcanvas-bar">
+
+            <button class="uk-offcanvas-close" type="button" data-uk-close></button>
+
+            <div class="addonpanel__header">
+                <h2>Addons for SIC3</h2>
+                <p>
+                    Please note that addons may be created by third-party developers and are not part of the core system.
+                    Make sure to only install addons from trusted sources.
+                </p>
+            </div>
+
+            <ul class="offcanvasmenu__menu">
+                <repeat group="@addonMenuEntries" value="@item">
+                    <li class="{{ @PATH == @BASE.'/'.@item.href ? 'uk-active' : '' }}">
+                        <a href="{{ @BASE }}/{{ @item.href }}" class="uk-flex uk-flex-middle">
+                            <span uk-icon="icon: {{ @item.icon }}" class="uk-margin-small-right"></span>
+                            {{ @item.title }}
+                            <span class="uk-margin-small-left addon-version-label">{{ @item.version }}</span>
+                        </a>
+                    </li>
+                </repeat>
+            </ul>
+
+        </div>
+    </div>
+</check>
+
 
 <footer>
     <div class="uk-container">

@@ -160,6 +160,15 @@ footer a:focus{
     color: var(--sic-theme-text);
 }
 
+.addon-version-label{
+    background-color: var(--sic-theme-card);
+    color: var(--sic-theme-text);
+    font-size: 0.8em;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    opacity: 0.7;
+}
+
 .menubar{
     background-color: var(--sic-theme-menubar);
 }
@@ -710,6 +719,16 @@ html {
     border: 0;
 }
 
+
+@media only screen and (max-width: 460px){
+    .menubar__logo{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .menubar__menu li.uk-margin-left{
+        margin-left: 10px !important;
+    }
+}
 
 
 

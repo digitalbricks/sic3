@@ -27,12 +27,13 @@
     </li>
 </check>
 
-{* addon menu items *}
-<repeat group="@addonMenuEntries" value="@item">
-    <li class="uk-margin-left {{ @PATH == @BASE.'/'.@item.href ? 'uk-active' : '' }}">
-        <a href="{{ @BASE }}/{{ @item.href }}" class="uk-flex uk-flex-middle">
-            <span uk-icon="icon: {{ @item.icon }}" class="uk-margin-small-right"></span>
-            <span class="uk-visible@m">{{ @item.title }}</span>
+
+{* addon panel toggle (panel located in _base.html), since 3.4.0 *}
+<check if="{{ count(@addonMenuEntries) }}">
+    <li class="uk-margin-left">
+        <a href="#addonpanel" data-uk-toggle>
+            <span uk-icon="icon: bolt" class="uk-margin-small-right"></span>
+            <span class="uk-visible@m">Addons</span>
         </a>
     </li>
-</repeat>
+</check>

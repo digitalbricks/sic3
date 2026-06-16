@@ -10,7 +10,7 @@ class HelloworldController extends SicAddon {
         return array(
             'name' => 'Helloworld',
             'description' => 'A simple addon to demonstrate how to create addons for Site Information Center.',
-            'version' => '1.0',
+            'version' => '1.0.0',
             'author' => 'Your Name',
             'license' => 'MIT',
             'adminOnly' => false,

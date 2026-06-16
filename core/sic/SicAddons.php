@@ -110,7 +110,17 @@ class SicAddons {
             }
 
             if(array_key_exists('menuEntry', $moduleinfo) && $moduleinfo['menuEntry']){
-                $addonMenuEntries[] = $moduleinfo['menuEntry'];
+                $menuEntry = $moduleinfo['menuEntry'];
+
+                // add version number to menu entry
+                $version = 'n/a';
+                if(array_key_exists('version', $moduleinfo) && $moduleinfo['version']){
+                    $version = $moduleinfo['version'];
+                }
+                $menuEntry['version'] = $version;
+
+                // add item to menu entries array
+                $addonMenuEntries[] = $menuEntry;
             }
         }
         // store addon menu entries in f3 variable for later use in the UI

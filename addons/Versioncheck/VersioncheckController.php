@@ -10,7 +10,7 @@ class VersioncheckController extends SicAddon {
         return array(
             'name' => 'Versioncheck',
             'description' => 'Checks the version of a CMS agains the latest version available.',
-            'version' => '1.0',
+            'version' => '1.1.0',
             'author' => 'Slugger',
             'license' => 'MIT',
             'adminOnly' => false,
@@ -27,7 +27,7 @@ class VersioncheckController extends SicAddon {
             'menuEntry' => array(               // optional: if provided, the addon will be listed in the sidebar menu
                 'title' => 'Version Check',       // title of the menu entry
                 'icon' => 'tag',                   // name of a UIkit Icon (https://getuikit.com/docs/icon)
-                'href' => 'addon/versioncheck/'   // href for the menu entry (addon/[addonname][route]) or external url
+                'href' => 'addon/versioncheck'   // href for the menu entry (addon/[addonname][route]) or external url
             )
         );
     }

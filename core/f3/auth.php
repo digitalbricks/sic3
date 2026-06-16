@@ -148,7 +148,7 @@ class Auth {
 				array_intersect_key($info[0],
 					array_flip($this->args['attr'])))),TRUE);
 		}
-		user_error(self::E_LDAP,E_USER_ERROR);
+        throw new \Exception(self::E_LDAP);
 	}
 
 	/**
@@ -195,7 +195,7 @@ class Auth {
 			fclose($socket);
 			return (bool)preg_match('/^235 /',$reply);
 		}
-		user_error(self::E_SMTP,E_USER_ERROR);
+        throw new \Exception(self::E_SMTP);
 	}
 
 	/**
@@ -247,7 +247,7 @@ class Auth {
 	*	@param $args array
 	*	@param $func callback
 	**/
-	function __construct($storage,array $args=NULL,$func=NULL) {
+	function __construct($storage,?array $args=NULL,$func=NULL) {
 		if (is_object($storage) && is_a($storage,'DB\Cursor')) {
 			$this->storage=$storage->dbtype();
 			$this->mapper=$storage;

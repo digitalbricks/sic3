@@ -380,7 +380,9 @@ class Web extends Prefab {
 		ob_start();
 		curl_exec($curl);
 		$err=curl_error($curl);
-		curl_close($curl);
+		if (version_compare(PHP_VERSION, '8.5.0')<0)
+			// TODO: remove this when php7 support is dropped
+			curl_close($curl);
 		$body=ob_get_clean();
 		if (!$err &&
 			$options['follow_location'] && $open_basedir &&
@@ -421,8 +423,11 @@ class Web extends Prefab {
 		$options['header']=implode($eol,$options['header']);
 		$body=@file_get_contents($url,FALSE,
 			stream_context_create(['http'=>$options]));
-		$headers=isset($http_response_header)?
-			$http_response_header:[];
+		if (PHP_VERSION_ID >= 80500)
+			$headers=http_get_last_response_headers() ?: [];
+		else
+			$headers=isset($http_response_header)?
+				$http_response_header:[];
 		$err='';
 		if (is_string($body)) {
 			$match=NULL;
@@ -565,7 +570,7 @@ class Web extends Prefab {
 		foreach ($flags as $key=>$val)
 			if ($val)
 				return $this->wrapper=$key;
-		user_error(self::E_Request,E_USER_ERROR);
+        throw new \Exception(self::E_Request);
 	}
 
 	/**
@@ -592,7 +597,7 @@ class Web extends Prefab {
 	*	@param $url string
 	*	@param $options array
 	**/
-	function request($url,array $options=NULL) {
+	function request($url,?array $options=NULL) {
 		$fw=Base::instance();
 		$parts=parse_url($url);
 		if (empty($parts['scheme'])) {
@@ -946,13 +951,18 @@ class Web extends Prefab {
 	}
 
 	/**
-	*	Return a URL/filesystem-friendly version of string
-	*	@return string
-	*	@param $text string
-	**/
-	function slug($text) {
-		return trim(strtolower(preg_replace('/([^\pL\pN])+/u','-',
-			trim(strtr($text,Base::instance()->DIACRITICS+$this->diacritics())))),'-');
+	 *	Return a URL/filesystem-friendly version of string
+	 *	@return string
+	 *	@param $text string
+	 *	@param $separator string
+	 **/
+	function slug($text, $separator = '-')
+	{
+		return trim(strtolower(preg_replace(
+			'/([^\pL\pN])+/u',
+			$separator,
+			trim(strtr($text, Base::instance()->DIACRITICS + $this->diacritics()))
+		)), $separator);
 	}
 
 	/**

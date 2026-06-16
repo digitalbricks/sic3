@@ -12,7 +12,7 @@ class SicAddons {
         $this->f3 = $f3;
         $this->userIsAdmin = $this->f3->get('userIsAdmin');
 
-        $this->addonsDir = dirname(__FILE__) . '/../../addons/';
+        $this->addonsDir = dirname(__FILE__) . DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'addons'.DIRECTORY_SEPARATOR.'';
         if (!is_dir($this->addonsDir)) return;
 
         foreach (scandir($this->addonsDir) as $folder) {
@@ -21,7 +21,7 @@ class SicAddons {
             // skip directories that start with a dot (assuming disabled addons, e.g. .Helloworld)
             if(strpos($folder, '.') === 0) continue;
 
-            if (is_dir($this->addonsDir . $folder . '/')) {
+            if (is_dir($this->addonsDir . $folder . DIRECTORY_SEPARATOR)) {
                 $this->addons[] = $folder;
             }
         }

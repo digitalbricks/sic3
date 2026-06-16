@@ -1,0 +1,120 @@
+{*
+    vc-systems.html – CMS-Definitionen verwalten
+    Addon für SIC3 von digitalbricks
+    CRUD-Übersicht aller vc_systems Einträge
+    Abhängigkeiten: VcController.php, UIkit CSS
+*}
+
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <div uk-grid class="uk-flex uk-flex-between uk-flex-middle">
+            <div>
+                <h2 class="uk-card-title">
+                    CMS-Definitionen
+                    <span class="uk-badge">{{ count(@tplVcSystems) }}</span>
+                </h2>
+            </div>
+            <div>
+                <a href="{{ @BASE }}/addon/versioncheck"
+                   class="uk-button uk-button-default"
+                   data-uk-tooltip title="Zurück zur Übersicht">
+                    <span uk-icon="icon: arrow-left"></span>
+                    <span class="uk-visible@m uk-margin-small-left">Übersicht</span>
+                </a>
+                <a href="{{ @BASE }}/addon/versioncheck/systems/add"
+                   class="uk-button uk-button-primary uk-margin-small-left">
+                    <span uk-icon="icon: plus"></span>
+                    <span class="uk-visible@m uk-margin-small-left">Neu anlegen</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="uk-card-body">
+
+        <check if="{{ count(@tplVcSystems) > 0 }}">
+            <true>
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-divider">
+                        <thead>
+                            <tr>
+                                <th>sys_key</th>
+                                <th>Label</th>
+                                <th>Source</th>
+                                <th>Endpoint</th>
+                                <th>Filter</th>
+                                <th>Status</th>
+                                <th><span class="uk-hidden">Aktionen</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <repeat group="{{ @tplVcSystems }}" value="{{ @sys }}">
+                            <tr>
+                                <td><code>{{ @sys.sys_key }}</code></td>
+                                <td>{{ @sys.label }}</td>
+                                <td>
+                                    <check if="{{ @sys.source=='extension' }}">
+                                        <true>
+                                            <span class="uk-label uk-label-warning">
+                                                <span uk-icon="bolt"></span> EXT
+                                            </span>
+                                        </true>
+                                        <false>
+                                            <span class="uk-label uk-label-default">{{ @sys.source }}</span>
+                                        </false>
+                                    </check>
+
+                                </td>
+                                <td class="uk-text-small uk-text-muted">
+                                    {{ @sys.endpoint }}
+                                    <check if="{{ @sys.source=='extension' }}">
+                                        (EXTENSION)
+                                    </check>
+                                </td>
+                                <td>{{ @sys.filter }}</td>
+                                <td>
+                                    <check if="{{ @sys.is_active == '1' }}">
+                                        <true>
+                                            <span class="uk-label uk-label-success">Aktiv</span>
+                                        </true>
+                                        <false>
+                                            <span class="uk-label uk-label-danger">Inaktiv</span>
+                                        </false>
+                                    </check>
+                                </td>
+                                <td>
+                                    <div class="nowrap">
+                                        <a href="{{ @BASE }}/addon/versioncheck/systems/edit/{{ @sys.id }}"
+                                           class="uk-button uk-button-primary"
+                                           data-uk-tooltip title="Bearbeiten">
+                                            <span uk-icon="icon: pencil"></span>
+                                        </a>
+                                        <form action="{{ @BASE }}/addon/versioncheck/systems/delete/{{ @sys.id }}"
+                                              method="post"
+                                              class="uk-display-inline"
+                                              onsubmit="return confirm('CMS-Definition \'{{ @sys.label }}\' wirklich löschen?')">
+                                            <input type="hidden" name="csrf" value="{{ @tplCSRF }}">
+                                            <button class="uk-button uk-button-danger"
+                                                    data-uk-tooltip title="Löschen">
+                                                <span uk-icon="icon: trash"></span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </true>
+            <false>
+                <div class="uk-alert-primary" uk-alert>
+                    <p>Keine CMS-Definitionen vorhanden.
+                        <a href="{{ @BASE }}/versioncheck/systems/add"><strong>Jetzt anlegen</strong></a>
+                    </p>
+                </div>
+            </false>
+        </check>
+
+    </div>
+</div>

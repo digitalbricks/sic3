@@ -129,7 +129,7 @@ class Mapper extends \DB\Cursor {
 			return $this->adhoc[$key]['value'];
 		elseif (array_key_exists($key,$this->props))
 			return $this->props[$key];
-		user_error(sprintf(self::E_Field,$key),E_USER_ERROR);
+        throw new \Exception(sprintf(self::E_Field,$key));
 	}
 
 	/**
@@ -205,7 +205,7 @@ class Mapper extends \DB\Cursor {
 	*	@param $filter string|array
 	*	@param $options array
 	**/
-	function stringify($fields,$filter=NULL,array $options=NULL) {
+	function stringify($fields,$filter=NULL,?array $options=NULL) {
 		if (!$options)
 			$options=[];
 		$options+=[
@@ -303,7 +303,7 @@ class Mapper extends \DB\Cursor {
 	*	@param $options array
 	*	@param $ttl int|array
 	**/
-	function select($fields,$filter=NULL,array $options=NULL,$ttl=0) {
+	function select($fields,$filter=NULL,?array $options=NULL,$ttl=0) {
 		list($sql,$args)=$this->stringify($fields,$filter,$options);
 		$result=$this->db->exec($sql,$args,$ttl);
 		$out=[];
@@ -329,7 +329,7 @@ class Mapper extends \DB\Cursor {
 	*	@param $options array
 	*	@param $ttl int|array
 	**/
-	function find($filter=NULL,array $options=NULL,$ttl=0) {
+	function find($filter=NULL,?array $options=NULL,$ttl=0) {
 		if (!$options)
 			$options=[];
 		$options+=[
@@ -355,7 +355,7 @@ class Mapper extends \DB\Cursor {
 	*	@param $options array
 	*	@param $ttl int|array
 	**/
-	function count($filter=NULL,array $options=NULL,$ttl=0) {
+	function count($filter=NULL,?array $options=NULL,$ttl=0) {
 		$adhoc=[];
 		// with grouping involved, we need to wrap the actualy query and count the results
 		if ($subquery_mode=($options && !empty($options['group']))) {
@@ -539,7 +539,7 @@ class Mapper extends \DB\Cursor {
 					$args[++$ctr]=[$field['previous'],$field['pdo_type']];
 				}
 			if (!$filter)
-				user_error(sprintf(self::E_PKey,$this->source),E_USER_ERROR);
+                throw new \Exception(sprintf(self::E_PKey,$this->source));
 			$sql='UPDATE '.$this->table.' SET '.$pairs.$filter;
 			$this->db->exec($sql,$args);
 		}
@@ -634,7 +634,7 @@ class Mapper extends \DB\Cursor {
 			unset($field);
 		}
 		if (!$filter)
-			user_error(sprintf(self::E_PKey,$this->source),E_USER_ERROR);
+            throw new \Exception(sprintf(self::E_PKey,$this->source));
 		foreach ($this->adhoc as &$field) {
 			$field['value']=NULL;
 			unset($field);

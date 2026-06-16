@@ -2,7 +2,7 @@
 
 /*
 
-	Copyright (c) 2009-2019 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2023 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfreeframework.com).
 
@@ -38,14 +38,88 @@ abstract class Prefab {
 	}
 
 }
-
+/**
+ * @property string ALIAS
+ * @property array ALIASES
+ * @property string|array AUTOLOAD
+ * @property bool|string CACHE
+ * @property bool CASELESS
+ * @property callable|\Prefab|\Psr\Container\ContainerInterface CONTAINER
+ * @property array COOKIE
+ * @property array GET
+ * @property array POST
+ * @property array REQUEST
+ * @property array SESSION
+ * @property array FILES
+ * @property array SERVER
+ * @property array ENV
+ * @property array CORS
+ * @property int DEBUG
+ * @property array DIACRITICS
+ * @property string DNSBL
+ * @property array EMOJI
+ * @property string ENCODING
+ * @property bool ESCAPE
+ * @property string EXEMPT
+ * @property object EXCEPTION
+ * @property string FALLBACK
+ * @property array FORMATS
+ * @property string FRAGMENT
+ * @property bool HALT
+ * @property bool HIGHLIGHT
+ * @property array JAR
+ * @property string LANGUAGE
+ * @property string LOCALES
+ * @property string|array LOGGABLE
+ * @property string LOGS
+ * @property mixed ONERROR
+ * @property mixed ONREROUTE
+ * @property string|null PACKAGE
+ * @property array PARAMS
+ * @property string PLUGINS
+ * @property string PREFIX
+ * @property string PREMAP
+ * @property bool QUIET
+ * @property bool RAW
+ * @property array ROUTES
+ * @property string SEED
+ * @property string SERIALIZER
+ * @property string TEMP
+ * @property float TIME
+ * @property bool REROUTE_TRAILING_SLASH
+ * @property string TZ
+ * @property string UI
+ * @property callback UNLOAD
+ * @property string UPLOADS
+ * @property string URI
+ * @property string VERB
+ * @property string VERSION
+ * @property string|null XFRAME
+ * @property-read string AGENT
+ * @property-read bool AJAX
+ * @property-read string BASE
+ * @property-read string BODY
+ * @property-read bool CLI
+ * @property-read array ERROR
+ * @property-read array HEADERS
+ * @property-read string HOST
+ * @property-read string IP
+ * @property-read string PATH
+ * @property-read string PATTERN
+ * @property-read int PORT
+ * @property-read string QUERY
+ * @property-read string REALM
+ * @property-read string RESPONSE
+ * @property-read string ROOT
+ * @property-read string SCHEME
+ */
 //! Base structure
 final class Base extends Prefab implements ArrayAccess {
 
 	//@{ Framework details
 	const
 		PACKAGE='Fat-Free Framework',
-		VERSION='3.8.1-Release';
+		VERSION='3.9.2-Release';
 	//@}
 
 	//@{ HTTP status codes (RFC 2616)
@@ -172,7 +246,7 @@ final class Base extends Prefab implements ArrayAccess {
 	function build($url, $args=[], $addParams=TRUE) {
 		if ($addParams)
 			$args+=$this->recursive($this->hive['PARAMS'], function($val) {
-				return implode('/', array_map('urlencode', explode('/', $val)));
+				return implode('/', array_map('urlencode', explode('/', $val ?? '')));
 			});
 		if (is_array($url))
 			foreach ($url as &$var) {
@@ -312,8 +386,7 @@ final class Base extends Prefab implements ArrayAccess {
 			$this->sync('SESSION');
 		}
 		elseif (!preg_match('/^\w+$/',$parts[0]))
-			user_error(sprintf(self::E_Hive,$this->stringify($key)),
-				E_USER_ERROR);
+            throw new \Exception(\sprintf(self::E_Hive,$this->stringify($key)));
 		if (is_null($var)) {
 			if ($add)
 				$var=&$this->hive;
@@ -700,6 +773,18 @@ final class Base extends Prefab implements ArrayAccess {
 		return $out;
 	}
 
+    /**
+     * fetch a hive key result, then clear the key
+     * @param string $key
+     * @return mixed
+     */
+    function pull($key): mixed
+    {
+        $value = $this->get($key);
+        $this->clear($key);
+        return $value;
+    }
+
 	/**
 	*	Convert backslashes to slashes
 	*	@return string
@@ -726,7 +811,7 @@ final class Base extends Prefab implements ArrayAccess {
 	*	@param $arg mixed
 	*	@param $stack array
 	**/
-	function stringify($arg,array $stack=NULL) {
+	function stringify($arg,?array $stack=NULL) {
 		if ($stack) {
 			foreach ($stack as $node)
 				if ($arg===$node)
@@ -905,10 +990,10 @@ final class Base extends Prefab implements ArrayAccess {
 	}
 
 	/**
-	*	Remove HTML tags (except those enumerated) and non-printable
-	*	characters to mitigate XSS/code injection attacks
-	*	@return mixed
-	*	@param $arg mixed
+	*	Remove HTML tags (except those enumerated) and non-printable characters
+    *   NB: This method doesn't mitigate XSS/code injection attacks.
+    *   @return mixed
+    *	@param $arg mixed
 	*	@param $tags string
 	**/
 	function clean($arg,$tags=NULL) {
@@ -1067,7 +1152,7 @@ final class Base extends Prefab implements ArrayAccess {
 									($mod=='full' ? IntlDateFormatter::FULL : IntlDateFormatter::LONG);
 								$pattern = $dateType === IntlDateFormatter::SHORT
 									? (($ptn=IntlDatePatternGenerator::create($lang[0]))
-										? $ptn->getBestPattern('YYYYMMdd') : null) : null;
+										? $ptn->getBestPattern('yyyyMMdd') : null) : null;
 								$formatter = new IntlDateFormatter($lang[0],$dateType,
 									IntlDateFormatter::NONE, null,null, $pattern);
 								return $formatter->format($args[$pos]);
@@ -1220,7 +1305,7 @@ final class Base extends Prefab implements ArrayAccess {
 
 	/**
 	*	Return PHP value derived from string
-	*	@return string
+	*	@return mixed
 	*	@param $arg mixed
 	**/
 	function unserialize($arg) {
@@ -1316,7 +1401,7 @@ final class Base extends Prefab implements ArrayAccess {
 	*	@param $trace array|NULL
 	*	@param $format bool
 	**/
-	function trace(array $trace=NULL,$format=TRUE) {
+	function trace(?array $trace=NULL,$format=TRUE) {
 		if (!$trace) {
 			$trace=debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			$frame=$trace[0];
@@ -1364,7 +1449,7 @@ final class Base extends Prefab implements ArrayAccess {
 	*	@param $trace array
 	*	@param $level int
 	**/
-	function error($code,$text='',array $trace=NULL,$level=0) {
+	function error($code,$text='',?array $trace=NULL,$level=0) {
 		$prior=$this->hive['ERROR'];
 		$header=$this->status($code);
 		$req=$this->hive['VERB'].' '.$this->hive['PATH'];
@@ -1443,7 +1528,7 @@ final class Base extends Prefab implements ArrayAccess {
 	*	@param $body string
 	**/
 	function mock($pattern,
-		array $args=NULL,array $headers=NULL,$body=NULL) {
+		?array $args=NULL,?array $headers=NULL,$body=NULL) {
 		if (!$args)
 			$args=[];
 		$types=['sync','ajax','cli'];
@@ -1452,13 +1537,13 @@ final class Base extends Prefab implements ArrayAccess {
 		$verb=strtoupper($parts[1]);
 		if ($parts[2]) {
 			if (empty($this->hive['ALIASES'][$parts[2]]))
-				user_error(sprintf(self::E_Named,$parts[2]),E_USER_ERROR);
+                throw new \Exception(sprintf(self::E_Named,$parts[2]));
 			$parts[4]=$this->hive['ALIASES'][$parts[2]];
 			$parts[4]=$this->build($parts[4],
 				isset($parts[3])?$this->parse($parts[3]):[]);
 		}
 		if (empty($parts[4]))
-			user_error(sprintf(self::E_Pattern,$pattern),E_USER_ERROR);
+            throw new \Exception(sprintf(self::E_Pattern,$pattern));
 		$url=parse_url($parts[4]);
 		parse_str(isset($url['query'])?$url['query']:'',$GLOBALS['_GET']);
 		if (preg_match('/GET|HEAD/',$verb))
@@ -1494,7 +1579,7 @@ final class Base extends Prefab implements ArrayAccess {
 		if (!is_array($params))
 			$params=$this->parse($params);
 		if (empty($this->hive['ALIASES'][$name]))
-			user_error(sprintf(self::E_Named,$name),E_USER_ERROR);
+            throw new \Exception(sprintf(self::E_Named,$name));
 		$url=$this->build($this->hive['ALIASES'][$name],$params);
 		if (is_array($query))
 			$query=http_build_query($query);
@@ -1521,22 +1606,22 @@ final class Base extends Prefab implements ArrayAccess {
 			'(?:\h+\[('.implode('|',$types).')\])?/u',$pattern,$parts);
 		if (isset($parts[2]) && $parts[2]) {
 			if (!preg_match('/^\w+$/',$parts[2]))
-				user_error(sprintf(self::E_Alias,$parts[2]),E_USER_ERROR);
+                throw new \Exception(sprintf(self::E_Alias,$parts[2]));
 			$this->hive['ALIASES'][$alias=$parts[2]]=$parts[3];
 		}
 		elseif (!empty($parts[4])) {
 			if (empty($this->hive['ALIASES'][$parts[4]]))
-				user_error(sprintf(self::E_Named,$parts[4]),E_USER_ERROR);
+                throw new \Exception(sprintf(self::E_Named,$parts[4]));
 			$parts[3]=$this->hive['ALIASES'][$alias=$parts[4]];
 		}
 		if (empty($parts[3]))
-			user_error(sprintf(self::E_Pattern,$pattern),E_USER_ERROR);
+            throw new \Exception(sprintf(self::E_Pattern,$pattern));
 		$type=empty($parts[5])?0:constant('self::REQ_'.strtoupper($parts[5]));
 		foreach ($this->split($parts[1]) as $verb) {
 			if (!preg_match('/'.self::VERBS.'/',$verb))
 				$this->error(501,$verb.' '.$this->hive['URI']);
 			$this->hive['ROUTES'][$parts[3]][$type][strtoupper($verb)]=
-				[$handler,$ttl,$kbps,$alias];
+				[is_string($handler) ? trim($handler) : $handler,$ttl,$kbps,$alias];
 		}
 	}
 
@@ -1690,7 +1775,7 @@ final class Base extends Prefab implements ArrayAccess {
 			$this->error(403);
 		if (!$this->hive['ROUTES'])
 			// No routes defined
-			user_error(self::E_Routes,E_USER_ERROR);
+            throw new \Exception(self::E_Routes);
 		// Match specific routes first
 		$paths=[];
 		foreach ($keys=array_keys($this->hive['ROUTES']) as $key) {
@@ -1728,7 +1813,8 @@ final class Base extends Prefab implements ArrayAccess {
 			if (!$route)
 				continue;
 			if (isset($route[$this->hive['VERB']]) && !$preflight) {
-				if ($this->hive['VERB']=='GET' &&
+				if ($this->hive['REROUTE_TRAILING_SLASH']===TRUE &&
+					$this->hive['VERB']=='GET' &&
 					preg_match('/.+\/$/',$this->hive['PATH']))
 					$this->reroute(substr($this->hive['PATH'],0,-1).
 						($this->hive['QUERY']?('?'.$this->hive['QUERY']):''));
@@ -1921,7 +2007,7 @@ final class Base extends Prefab implements ArrayAccess {
 		if (preg_match('/(.+)\h*(->|::)\h*(.+)/s',$func,$parts)) {
 			// Convert string to executable PHP callback
 			if (!class_exists($parts[1]))
-				user_error(sprintf(self::E_Class,$parts[1]),E_USER_ERROR);
+                throw new \Exception(sprintf(self::E_Class,$parts[1]));
 			if ($parts[2]=='->') {
 				if (is_subclass_of($parts[1],'Prefab'))
 					$parts[1]=call_user_func($parts[1].'::instance');
@@ -1937,9 +2023,8 @@ final class Base extends Prefab implements ArrayAccess {
 						$parts[1]=call_user_func($container.'::instance')->
 							get($parts[1]);
 					else
-						user_error(sprintf(self::E_Class,
-							$this->stringify($parts[1])),
-							E_USER_ERROR);
+                        throw new \Exception(sprintf(self::E_Class,
+							$this->stringify($parts[1])));
 				}
 				else {
 					$ref=new ReflectionClass($parts[1]);
@@ -1980,9 +2065,8 @@ final class Base extends Prefab implements ArrayAccess {
 				$this->error(405);
 			}
 			else
-				user_error(sprintf(self::E_Method,
-					is_string($func)?$func:$this->stringify($func)),
-					E_USER_ERROR);
+                throw new \Exception(sprintf(self::E_Method,
+					is_string($func)?$func:$this->stringify($func)));
 		$obj=FALSE;
 		if (is_array($func)) {
 			$hooks=$this->split($hooks);
@@ -2081,7 +2165,7 @@ final class Base extends Prefab implements ArrayAccess {
 							array_merge([$match['lval']],
 								str_getcsv($cmd[1]=='config'?
 								$this->cast($match['rval']):
-									$match['rval']))
+									$match['rval'],",",'"', "\\"))
 						);
 					}
 					else {
@@ -2104,7 +2188,7 @@ final class Base extends Prefab implements ArrayAccess {
 							// Mark quoted strings with 0x00 whitespace
 							str_getcsv(preg_replace(
 								'/(?<!\\\\)(")(.*?)\1/',
-								"\\1\x00\\2\\1",trim($rval)))
+								"\\1\x00\\2\\1",trim($rval)),",",'"', "\\")
 						);
 						preg_match('/^(?<section>[^:]+)(?:\:(?<func>.+))?/',
 							$sec,$parts);
@@ -2165,9 +2249,15 @@ final class Base extends Prefab implements ArrayAccess {
 	*	@param $file string
 	*	@param $lf bool
 	**/
-	function read($file,$lf=FALSE) {
-		$out=@file_get_contents($file);
-		return $lf?preg_replace('/\r\n|\r/',"\n",$out):$out;
+	function read($file, $lf = FALSE)
+	{
+		if (!file_exists($file)) {
+			return false;
+		}
+		
+		$out = file_get_contents($file);
+
+		return $lf ? preg_replace('/\r\n|\r/', "\n", $out) : $out;
 	}
 
 	/**
@@ -2353,7 +2443,7 @@ final class Base extends Prefab implements ArrayAccess {
 	function __call($key,array $args) {
 		if ($this->exists($key,$val))
 			return call_user_func_array($val,$args);
-		user_error(sprintf(self::E_Method,$key),E_USER_ERROR);
+        throw new \Exception(sprintf(self::E_Method,$key));
 	}
 
 	//! Prohibit cloning
@@ -2371,7 +2461,11 @@ final class Base extends Prefab implements ArrayAccess {
 		@ini_set('magic_quotes_gpc',0);
 		@ini_set('register_globals',0);
 		// Intercept errors/exceptions; PHP5.3-compatible
-		$check=error_reporting((E_ALL|E_STRICT)&~(E_NOTICE|E_USER_NOTICE));
+		if (PHP_VERSION_ID >= 80400) {
+			$check = error_reporting((E_ALL) & ~(E_NOTICE | E_USER_NOTICE));
+		} else {
+			$check = error_reporting((E_ALL | E_STRICT) & ~(E_NOTICE | E_USER_NOTICE));
+		}
 		set_exception_handler(
 			function($obj) {
 				/** @var Exception $obj */
@@ -2530,6 +2624,7 @@ final class Base extends Prefab implements ArrayAccess {
 			'PACKAGE'=>self::PACKAGE,
 			'PARAMS'=>[],
 			'PATH'=>$path,
+			'REROUTE_TRAILING_SLASH'=>TRUE,
 			'PATTERN'=>NULL,
 			'PLUGINS'=>$this->fixslashes(__DIR__).'/',
 			'PORT'=>$port,
@@ -2648,7 +2743,8 @@ class Cache extends Prefab {
 				$raw=xcache_get($ndx);
 				break;
 			case 'folder':
-				$raw=$fw->read($parts[1].$ndx);
+				$raw=$fw->read($parts[1]
+					.str_replace(['/','\\'],'',$ndx));
 				break;
 		}
 		if (!empty($raw)) {
@@ -2928,7 +3024,7 @@ class View extends Prefab {
 	*	@param $hive array
 	*	@param $mime string
 	**/
-	protected function sandbox(array $hive=NULL,$mime=NULL) {
+	protected function sandbox(?array $hive=NULL,$mime=NULL) {
 		$fw=$this->fw;
 		$implicit=FALSE;
 		if (is_null($hive)) {
@@ -2965,7 +3061,7 @@ class View extends Prefab {
 	*	@param $hive array
 	*	@param $ttl int
 	**/
-	function render($file,$mime='text/html',array $hive=NULL,$ttl=0) {
+	function render($file,$mime='text/html',?array $hive=NULL,$ttl=0) {
 		$fw=$this->fw;
 		$cache=Cache::instance();
 		foreach ($fw->split($fw->UI) as $dir) {
@@ -2985,7 +3081,7 @@ class View extends Prefab {
 				return $data;
 			}
 		}
-		user_error(sprintf(Base::E_Open,$file),E_USER_ERROR);
+        throw new \Exception(sprintf(Base::E_Open,$file));
 	}
 
 	/**
@@ -3112,7 +3208,7 @@ class Preview extends View {
 	*	@param $persist bool
 	*	@param $escape bool
 	**/
-	function resolve($node,array $hive=NULL,$ttl=0,$persist=FALSE,$escape=NULL) {
+	function resolve($node,?array $hive=NULL,$ttl=0,$persist=FALSE,$escape=NULL) {
 		$hash=null;
 		$fw=$this->fw;
 		$cache=Cache::instance();
@@ -3174,7 +3270,7 @@ class Preview extends View {
 	*	@param $hive array
 	*	@param $ttl int
 	**/
-	function render($file,$mime='text/html',array $hive=NULL,$ttl=0) {
+	function render($file,$mime='text/html',?array $hive=NULL,$ttl=0) {
 		$fw=$this->fw;
 		$cache=Cache::instance();
 		if (!is_dir($tmp=$fw->TEMP))
@@ -3206,7 +3302,7 @@ class Preview extends View {
 				return $data;
 			}
 		}
-		user_error(sprintf(Base::E_Open,$file),E_USER_ERROR);
+        throw new \Exception(sprintf(Base::E_Open,$file));
 	}
 
 	/**

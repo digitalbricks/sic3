@@ -1,0 +1,180 @@
+{*
+    vc-systems-edit.html – CMS-Definition Add / Edit Formular
+    Addon für SIC3 von digitalbricks
+    Wird für Neuanlage (id=0) und Bearbeitung verwendet
+    Neu: Feld download_url für Link bei "Update verfügbar"
+    Abhängigkeiten: VcController.php, UIkit CSS
+*}
+
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <div uk-grid class="uk-flex uk-flex-between uk-flex-middle">
+            <div>
+                <check if="{{ @tplVcSystem.id != 0 }}">
+                    <true><h2 class="uk-card-title">CMS bearbeiten</h2></true>
+                    <false><h2 class="uk-card-title">CMS hinzufügen</h2></false>
+                </check>
+            </div>
+            <div>
+                <a href="{{ @BASE }}/addon/versioncheck/systems" class="uk-button uk-button-default">
+                    <span uk-icon="icon: arrow-left"></span>
+                    <span class="uk-visible@m uk-margin-small-left">Zurück</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="uk-card-body">
+
+        <div class="uk-alert-primary" uk-alert>
+            <p>
+                <strong>sys_key</strong> muss exakt dem <code>sys</code>-Wert der SIC3-Sites entsprechen
+                (Groß-/Kleinschreibung wird ignoriert).
+            </p>
+        </div>
+
+        <check if="{{ @tplVcSystem.id != 0 }}">
+            <true>
+                <form class="uk-form-stacked" method="post"
+                      action="{{ @BASE }}/addon/versioncheck/systems/edit/{{ @tplVcSystem.id }}">
+            </true>
+            <false>
+                <form class="uk-form-stacked" method="post"
+                      action="{{ @BASE }}/addon/versioncheck/systems/add">
+            </false>
+        </check>
+
+            <input type="hidden" name="csrf" value="{{ @tplCSRF }}">
+
+            <div class="uk-grid uk-grid-small" data-uk-grid>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="sys_key">
+                        sys_key *
+                        <span data-uk-icon="question"
+                              data-uk-tooltip="title: Muss dem sys-Wert in SIC3 entsprechen. z.B. wbce / wordpress / joomla"></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="sys_key" id="sys_key" class="uk-input" type="text"
+                               placeholder="z.B. wbce"
+                               value="{{ @tplVcSystem.sys_key }}" required>
+                    </div>
+                </div>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="label">
+                        Label *
+                        <span data-uk-icon="question"
+                              data-uk-tooltip="title: Anzeigename in der Übersicht"></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="label" id="label" class="uk-input" type="text"
+                               placeholder="z.B. WBCE CMS"
+                               value="{{ @tplVcSystem.label }}" required>
+                    </div>
+                </div>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="source">
+                        Source *
+                        <span data-uk-icon="question"
+                              data-uk-tooltip="title: github = GitHub Releases API | wp_api = WordPress.org API | xml = XML-Endpunkt | json = JSON-Endpunkt"></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <select name="source" id="source" class="uk-select">
+                            <option value="github" {{ @tplVcSystem.source == 'github' ? 'selected' : '' }}>github</option>
+                            <option value="wp_api" {{ @tplVcSystem.source == 'wp_api' ? 'selected' : '' }}>wp_api</option>
+                            <option value="xml"    {{ @tplVcSystem.source == 'xml'    ? 'selected' : '' }}>xml</option>
+                            <option value="json"   {{ @tplVcSystem.source == 'json'   ? 'selected' : '' }}>json</option>
+                            <option value="extension"   {{ @tplVcSystem.source == 'extension'   ? 'selected' : '' }}>extension</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-width-1-2@m">
+                    <label class="uk-form-label" for="filter">
+                        Filter
+                        <span data-uk-icon="question"
+                              data-uk-tooltip="title: stable = keine Pre-Releases | all = alle Releases"></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <select name="filter" id="filter" class="uk-select">
+                            <option value="stable" {{ @tplVcSystem.filter == 'stable' ? 'selected' : '' }}>stable</option>
+                            <option value="all"    {{ @tplVcSystem.filter == 'all'    ? 'selected' : '' }}>all</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-width-1-1">
+                    <label class="uk-form-label" for="endpoint">
+                        Endpoint *
+                        <span data-uk-icon="question"
+                              data-uk-tooltip="title: github: owner/repo | wp_api/xml/json: vollständige URL"></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="endpoint" id="endpoint" class="uk-input" type="text"
+                               placeholder="z.B. WBCE/WBCE_CMS"
+                               value="{{ @tplVcSystem.endpoint }}" required>
+                    </div>
+                    <p class="uk-text-muted uk-text-small uk-margin-small-top" id="endpoint-hint"></p>
+                </div>
+
+                <div class="uk-width-1-1">
+                    <label class="uk-form-label" for="download_url">
+                        Download-URL (optional)
+                        <span data-uk-icon="question"
+                              data-uk-tooltip="title: Link zur Download-Seite. Wird bei 'Update verfügbar' als klickbarer Link angezeigt."></span>
+                    </label>
+                    <div class="uk-form-controls">
+                        <input name="download_url" id="download_url" class="uk-input" type="url"
+                               placeholder="https://example.com/download"
+                               value="{{ @tplVcSystem.download_url }}">
+                    </div>
+                </div>
+
+                <div class="uk-width-1-1">
+                    <div class="uk-form-label">
+                        Status*
+                    </div>
+                    <div class="uk-form-controls">
+                        <label for="is_active" class="checkswitch">
+                            <input type="checkbox" name="is_active" id="is_active"
+                                   value="1" {{ @tplVcSystem.is_active == '1' ? 'checked' : '' }}>
+                            <span>
+                                Aktiv
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="uk-margin-top">
+                <button type="submit" class="uk-button uk-button-primary">
+                    <span uk-icon="icon: check"></span> Speichern
+                </button>
+                <a href="{{ @BASE }}/versioncheck/systems"
+                   class="uk-button uk-button-default uk-margin-small-left">
+                    Abbrechen
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+(function() {
+    const hints = {
+        'github': 'Format: owner/repo – z.B. WBCE/WBCE_CMS oder joomla/joomla-cms',
+        'wp_api': 'URL der WordPress.org API – Standard: https://api.wordpress.org/core/version-check/1.7/',
+        'xml':    'Vollständige URL zu einem XML-Endpunkt mit <version> Element',
+        'json':   'Vollständige URL zu einem JSON-Endpunkt mit version / stable_version / current_version Feld'
+    };
+    const sourceSelect = document.getElementById('source');
+    const hintEl       = document.getElementById('endpoint-hint');
+    function updateHint() { hintEl.textContent = hints[sourceSelect.value] || ''; }
+    sourceSelect.addEventListener('change', updateHint);
+    updateHint();
+})();
+</script>

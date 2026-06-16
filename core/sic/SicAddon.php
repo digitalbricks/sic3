@@ -6,9 +6,11 @@
 class SicAddon {
 
     protected $f3;
+    protected $sic;
     public function __construct($f3) {
         // Initialize plugin
         $this->f3 = $f3;
+        $this->sic = $f3->get('sic');
 
     }
 
@@ -53,7 +55,7 @@ class SicAddon {
 
         // set the file to render as a partial in base in layout
         $partialRelativePath = 'addons/'.$this->getAddonDirname().'/views/'.trim($viewName);
-        $partialAbsolutePath = $this->getDirectory() . '/views/' . trim($viewName);
+        $partialAbsolutePath = $this->getAddonPath() . '/views/' . trim($viewName);
         if(!file_exists($partialAbsolutePath)){
             throw new \Exception("View file not found: " . $partialRelativePath);
         }
@@ -117,6 +119,7 @@ class SicAddon {
 
     /**
      * Returns absolute file path of the addon controller file.
+     * e.g. /var/www/html/addons/Helloworld/HelloworldController.php
      * @return string
      */
     public function getFilePath(): string {
@@ -125,15 +128,17 @@ class SicAddon {
 
     /**
      * Returns absolute directory path of the addon controller file.
+     * e.g. /var/www/html/addons/Helloworld
      * @return string
      */
-    public function getDirectory(): string {
+    public function getAddonPath(): string {
         $reflection = new \ReflectionClass(static::class);
         return dirname($reflection->getFileName());
     }
 
     /**
      * Returns the class name of the addon controller, e.g. HelloworldController.
+     * e.g. HelloworldController
      * @return string
      */
     public function getClassName(): string {
@@ -142,7 +147,7 @@ class SicAddon {
 
     /**
      * Returns the addon directory name, which is the class name without "Controller" suffix (if exists).
-     * Example: addons/Helloworld/ (with HelloworldController) -> Helloworld
+     * e.g. addons/Helloworld/ (with HelloworldController) -> Helloworld
      * @return string
      */
     public function getAddonDirname(): string {
@@ -151,6 +156,66 @@ class SicAddon {
             return str_replace('Controller', '', $className);
         }
         return $className;
+    }
+
+
+    /**
+     * Returns the root path of the application by removing /addons/[addonname] from the addon path.
+     * e.g. /var/www/html
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getRootPath(): string {
+        // get the path of the addon
+        $addonPath= realpath($this->getAddonPath());
+
+        // now remove /addons/[addonname] from the end of the path to get the root path of the application
+        $addonDirname = $this->getAddonDirname();
+        $addonsDirname = 'addons';
+        $addonPathParts = explode(DIRECTORY_SEPARATOR, $addonPath);
+        $addonDirnameIndex = array_search($addonDirname, $addonPathParts);
+        $addonsDirnameIndex = array_search($addonsDirname, $addonPathParts);
+        if($addonDirnameIndex === false || $addonsDirnameIndex === false || $addonDirnameIndex <= $addonsDirnameIndex){
+            throw new \Exception("Could not determine root path of the application from addon path: " . $addonPath);
+        }
+        $rootPathParts = array_slice($addonPathParts, 0, $addonsDirnameIndex);
+        $rootPath = implode(DIRECTORY_SEPARATOR, $rootPathParts);
+        return $rootPath;
+    }
+
+    /**
+     * Gets addon specific storage path, which is located in /storage/addons/[addonname]
+     * relative to the root path of the application.
+     * Creates the directory if it does not exist.
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getAndCreateStoragePath(): string {
+        $path = $this->getRootPath() . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . strtolower($this->getAddonDirname());
+        if(!file_exists($path)){
+            mkdir($path, 0755, true);
+        }
+        return $path;
+    }
+
+    /**
+     * Returns the relative URL to the addon,
+     * e.g. /addon/helloworld for Helloworld addon.
+     *
+     * @return string
+     */
+    public function getRelativeUrl(){
+        $className = $this->getClassName();
+        // remove "Controller" suffix from class name to get addon name
+        if(strpos($className, 'Controller') !== false){
+            $addonName = str_replace('Controller', '', $className);
+        } else {
+            $addonName = $className;
+        }
+        $url = $this->f3->get('BASE')."/addon/".strtolower($addonName);
+        return $url;
     }
 
 

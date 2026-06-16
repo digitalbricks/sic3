@@ -30,7 +30,7 @@ $f3->set('sic', new Sic($f3));
 
 
 /**
- * initialize addons
+ * Instantiate Addon Class
  * @since 3.4.0
  */
 $sicAddons = new SicAddons($f3);

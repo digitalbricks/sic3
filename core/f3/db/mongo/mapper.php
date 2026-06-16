@@ -74,7 +74,7 @@ class Mapper extends \DB\Cursor {
 	function &get($key) {
 		if ($this->exists($key))
 			return $this->document[$key];
-		user_error(sprintf(self::E_Field,$key),E_USER_ERROR);
+        throw new \Exception(sprintf(self::E_Field,$key));
 	}
 
 	/**
@@ -121,7 +121,7 @@ class Mapper extends \DB\Cursor {
 	*	@param $options array
 	*	@param $ttl int|array
 	**/
-	function select($fields=NULL,$filter=NULL,array $options=NULL,$ttl=0) {
+	function select($fields=NULL,$filter=NULL,?array $options=NULL,$ttl=0) {
 		if (!$options)
 			$options=[];
 		$options+=[
@@ -199,7 +199,7 @@ class Mapper extends \DB\Cursor {
 	*	@param $options array
 	*	@param $ttl int|array
 	**/
-	function find($filter=NULL,array $options=NULL,$ttl=0) {
+	function find($filter=NULL,?array $options=NULL,$ttl=0) {
 		if (!$options)
 			$options=[];
 		$options+=[
@@ -218,7 +218,7 @@ class Mapper extends \DB\Cursor {
 	*	@param $options array
 	*	@param $ttl int|array
 	**/
-	function count($filter=NULL,array $options=NULL,$ttl=0) {
+	function count($filter=NULL,?array $options=NULL,$ttl=0) {
 		$fw=\Base::instance();
 		$cache=\Cache::instance();
 		$tag='';

@@ -1,0 +1,174 @@
+{*
+    vc-overview.html – Version Check Übersicht
+    Addon für SIC3 von digitalbricks
+    Zeigt installierte vs. aktuelle CMS-Versionen
+    Bei "outdated": Link zur Download-Seite des CMS
+    Abhängigkeiten: VcController.php, UIkit CSS, axios
+*}
+
+<div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+        <div uk-grid class="uk-flex uk-flex-between uk-flex-middle">
+            <div>
+                <h2 class="uk-card-title">
+                    Version Check
+                    <span class="uk-badge" id="vc-badge">{{ count(@tplVcRows) }}</span>
+                </h2>
+            </div>
+            <div>
+                <a href="{{ @BASE }}/addon/versioncheck/systems"
+                   class="uk-button uk-button-default"
+                   data-uk-tooltip title="CMS-Definitionen verwalten">
+                    <span uk-icon="icon: settings"></span>
+                    <span class="uk-visible@m uk-margin-small-left">CMS-Definitionen</span>
+                </a>
+                <button id="vc-refresh-btn"
+                        class="uk-button uk-button-primary uk-margin-small-left"
+                        data-uk-tooltip title="Externe Versionen neu abrufen (ignoriert Cache)">
+                    <span uk-icon="icon: refresh"></span>
+                    <span class="uk-visible@m uk-margin-small-left">Jetzt prüfen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="uk-card-body">
+
+        <check if="{{ count(@tplVcRows) > 0 }}">
+            <true>
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-divider uk-table-hover" id="vc-table">
+                        <thead>
+                            <tr>
+                                <th>Site</th>
+                                <th>CMS</th>
+                                <th>Installiert</th>
+                                <th>Aktuell</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vc-tbody">
+                        <repeat group="{{ @tplVcRows }}" value="{{ @row }}">
+                            <tr data-syskey="{{ @row.sys_key }}"
+                                data-dlurl="{{ @row.download_url }}">
+                                <td>
+                                    {{ @row.site_name }}
+                                    <check if="{{ @row.site_link != '' }}">
+                                        <a href="{{ @row.site_link }}" target="_blank">
+                                            <span uk-icon="icon: link"></span>
+                                        </a>
+                                    </check>
+                                </td>
+                                <td>{{ @row.sys_label }}</td>
+                                <td>{{ @row.inst_ver }}</td>
+                                <td class="vc-latest">{{ @row.latest_ver }}</td>
+                                <td class="vc-status">
+                                    <check if="{{ @row.status == 'ok' }}">
+                                        <span class="uk-label uk-label-success">Aktuell</span>
+                                    </check>
+                                    <check if="{{ @row.status == 'outdated' }}">
+                                        <check if="{{ @row.download_url != '' }}">
+                                            <true>
+                                                <a href="{{ @row.download_url }}" target="_blank"
+                                                   class="uk-label uk-label-warning vc-dl-link"
+                                                   data-uk-tooltip title="Download {{ @row.latest_ver }}">
+                                                    Update verfügbar
+                                                    <span uk-icon="icon: download" style="margin-left:4px;vertical-align:middle;"></span>
+                                                </a>
+                                            </true>
+                                            <false>
+                                                <span class="uk-label uk-label-warning">Update verfügbar</span>
+                                            </false>
+                                        </check>
+                                    </check>
+                                    <check if="{{ @row.status == 'error' }}">
+                                        <span class="uk-label uk-label-danger">Fehler</span>
+                                    </check>
+                                    <check if="{{ @row.status == 'unknown' }}">
+                                        <span class="uk-label">Unbekannt</span>
+                                    </check>
+                                </td>
+                            </tr>
+                        </repeat>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="uk-text-muted uk-text-small" id="vc-last-check">
+                    Versionen werden 1h gecacht. Klick auf "Jetzt prüfen" erzwingt neue Abfrage.
+                </p>
+            </true>
+            <false>
+                <div class="uk-alert-primary" uk-alert>
+                    <p>Keine aktiven Sites in SIC3 vorhanden.</p>
+                </div>
+            </false>
+        </check>
+
+    </div>
+</div>
+
+<script src="{{ @BASE }}/core/assets/js/axios.min.js"></script>
+<script>
+(function() {
+    const btn = document.getElementById('vc-refresh-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', function() {
+        btn.disabled = true;
+        btn.innerHTML = '<span uk-spinner="ratio: 0.6"></span>';
+
+        axios.get(BASE + 'versioncheck/api/vc/fetch')
+            .then(function(res) {
+                const rows = res.data;
+                if (!Array.isArray(rows)) return;
+
+                rows.forEach(function(row) {
+                    const tr = document.querySelector('[data-syskey="' + row.sys_key + '"]');
+                    if (!tr) return;
+
+                    const latestCell = tr.querySelector('.vc-latest');
+                    if (latestCell) latestCell.textContent = row.latest_ver;
+
+                    const statusCell = tr.querySelector('.vc-status');
+                    if (statusCell) {
+                        const dlUrl = row.download_url || '';
+                        let html = '';
+                        if (row.status === 'ok') {
+                            html = '<span class="uk-label uk-label-success">Aktuell</span>';
+                        } else if (row.status === 'outdated') {
+                            if (dlUrl) {
+                                html = '<a href="' + dlUrl + '" target="_blank" '
+                                     + 'class="uk-label uk-label-warning vc-dl-link" '
+                                     + 'title="Download ' + row.latest_ver + '">'
+                                     + 'Update verfügbar '
+                                     + '<span uk-icon="icon: download" style="margin-left:4px;vertical-align:middle;"></span>'
+                                     + '</a>';
+                            } else {
+                                html = '<span class="uk-label uk-label-warning">Update verfügbar</span>';
+                            }
+                        } else if (row.status === 'error') {
+                            html = '<span class="uk-label uk-label-danger">Fehler</span>';
+                        } else {
+                            html = '<span class="uk-label">Unbekannt</span>';
+                        }
+                        statusCell.innerHTML = html;
+                    }
+                });
+
+                const info = document.getElementById('vc-last-check');
+                if (info) {
+                    const now = new Date().toLocaleTimeString('de-DE');
+                    info.textContent = 'Zuletzt geprüft: ' + now;
+                }
+            })
+            .catch(function() {
+                notify('danger', 'Fehler beim Abrufen der Versionen.');
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<span uk-icon="icon: refresh"></span>'
+                    + '<span class="uk-visible@m uk-margin-small-left">Jetzt prüfen</span>';
+            });
+    });
+})();
+</script>

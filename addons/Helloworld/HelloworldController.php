@@ -15,9 +15,9 @@ class HelloworldController extends SicAddon {
             'license' => 'MIT',
             'adminOnly' => false,
             'routes' => array(
-                'GET /' => 'index',             // means: Route /addon/helloworld | Controller: HelloworldController->index
-                'GET /test' => 'test',          // means: Route /addon/helloworld/test | Controller: HelloworldController->index
-                'GET /hello/@name' => 'hello',  // means: Route /addon/helloworld/hello/[variable] | Controller: HelloworldController->hello
+                'GET /' => 'indexRouteGet',             // means: Route /addon/helloworld | Controller: HelloworldController->index
+                'GET /test' => 'testRouteGet',          // means: Route /addon/helloworld/test | Controller: HelloworldController->index
+                'GET /hello/@name' => 'helloRouteGet',  // means: Route /addon/helloworld/hello/[variable] | Controller: HelloworldController->hello
             ),
             'menuEntry' => array(               // optional: if provided, the addon will be listed in the sidebar menu
                 'title' => 'Hello World',       // title of the menu entry
@@ -27,11 +27,19 @@ class HelloworldController extends SicAddon {
         );
     }
 
+    public function __construct($f3)
+    {
+        // don't forget to call the parent constructor!
+        parent::__construct($f3);
+
+        // you can do additional initialization here if needed
+    }
+
     /**
      * This is the method called when the route /addons/helloworld is called,
      * as defined in HelloworldController.php
      */
-    public function index() {
+    public function indexRouteGet() {
         echo "<h1>Hello World!</h1>";
     }
 
@@ -39,7 +47,7 @@ class HelloworldController extends SicAddon {
      * This is the method called when the route /addon/helloworld is called,
      * as defined in HelloworldController.php
      */
-    public function test() {
+    public function testRouteGet() {
         $data = array(
             'tplPagetitle' => 'Test page Helloworld Addon',                 // base layout variable
             'tplHeadline' => 'A simple test page for the Helloworld addon', // base layout variable
@@ -54,7 +62,7 @@ class HelloworldController extends SicAddon {
      * as defined in HelloworldController.php
      * Try it out by going to /helloworld/hello/YourName, and it should print "Hello World! YourName"
      */
-    public function hello() {
+    public function helloRouteGet() {
         $name = htmlentities(urlencode($this->f3->get('PARAMS.name')));
         echo "<h1>Hello World! {$name}</h1>";
     }

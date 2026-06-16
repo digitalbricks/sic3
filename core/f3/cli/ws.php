@@ -243,7 +243,7 @@ class WS {
 				$func($this);
 		});
 		if ($errstr)
-			user_error($errstr,E_USER_ERROR);
+            throw new \Exception($errstr);
 		if (isset($this->events['start']) &&
 			is_callable($func=$this->events['start']))
 			$func($this);
@@ -399,8 +399,8 @@ class Agent {
 		if (is_bool($server->write($this->socket,$buf)))
 			return FALSE;
 		if (!in_array($op,[WS::Pong,WS::Close]) &&
-			isset($this->server->events['send']) &&
-			is_callable($func=$this->server->events['send']))
+			isset($this->server->events()['send']) &&
+			is_callable($func=$this->server->events()['send']))
 			$func($this,$op,$data);
 		return $data;
 	}
@@ -446,8 +446,8 @@ class Agent {
 			case WS::Text:
 				$data=trim($data);
 			case WS::Binary:
-				if (isset($this->server->events['receive']) &&
-					is_callable($func=$this->server->events['receive']))
+				if (isset($this->server->events()['receive']) &&
+					is_callable($func=$this->server->events()['receive']))
 					$func($this,$op,$data);
 				break;
 			}
@@ -459,8 +459,8 @@ class Agent {
 	*	Destroy object
 	**/
 	function __destruct() {
-		if (isset($this->server->events['disconnect']) &&
-			is_callable($func=$this->server->events['disconnect']))
+		if (isset($this->server->events()['disconnect']) &&
+			is_callable($func=$this->server->events()['disconnect']))
 			$func($this);
 	}
 
@@ -479,8 +479,8 @@ class Agent {
 		$this->uri=$uri;
 		$this->headers=$hdrs;
 
-		if (isset($server->events['connect']) &&
-			is_callable($func=$server->events['connect']))
+		if (isset($server->events()['connect']) &&
+			is_callable($func=$server->events()['connect']))
 			$func($this);
 	}
 

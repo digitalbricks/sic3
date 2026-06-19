@@ -15,6 +15,10 @@ Lets a assume we have a CMS called "Mycms" and we want to create an extension fo
 4. Log in to SIC and navigate to the Versioncheck addon settings "CMS Definitionen" and add a new entry for your CMS
 5. In the "endpoint" field you would enter "x_mycms" (the "x_" prefix is mandatory, indicating the use of an extension).
 
+
+### Example CMS definition for the ProcessWireVcExtension:
+![alt Setup in SIC3 example](setupProcesswireExtension.jpg)
+
 Thats it. If the extension is implemented correctly, the Versioncheck addon will use it to query the latest version for 
 your CMS and display it in the overview.
 

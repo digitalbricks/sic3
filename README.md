@@ -66,6 +66,8 @@ If you prefer dark mode, SIC 3 has a dark mode. You can switch between light and
 ## Requirements
 **SIC** and the required **[SIC Satellite](https://github.com/digitalbricks/sic-satellite)** (more details in short) are written in **PHP**. SIC, the user interface or frontend, uses **SQLite** to store data and **CURL** to communicate with the satellite, so your (local) server running SIC must have CURL installed - which is the case in most environments, especially if you local server is driven by XAMPP or MAMP.
 
+Testet with PHP **8.2 and 8.3**. PHP 8.4 not supported by the underlying framework yet.
+ 
 **IMPORTANT NOTE: SIC 3 has, in contrast to SIC LIGHT 2, a user management and a login. But because my profession is the frontend, not backend development and security, it is still not intended to be used on a remote server. At least not now. I made use of [Fat-Free Framework](https://fatfreeframework.com/) (F3) for the routing and the login mechanism but this is my first F3 project so I do not recommend exposing SIC 3 to the internet.**
 
 
@@ -108,7 +110,7 @@ As Site Information Center is only responsible for displaying and storing of ret
 6. Enter the System Identifier (e.g. WORDPRESS – see supported systems in [SIC Satellite](https://github.com/digitalbricks/sic-satellite), SIC 3 will provide a dropdown with all supported systems)
 7. Set the status to "Active"
 
-Great. No, to get a response from the site when SIC 3 asks for data, you have to create the satellite file and place it on the target server. See next section.
+Great. Now, to get a response from the site when SIC 3 asks for data, you have to create the satellite file and place it on the target server. See next section.
 
 
 ## Configuration: Satellite
@@ -131,5 +133,10 @@ SIC 3 will provide you with the satellite code, so you don't have to write it by
 2. Install SIC 3 in a new folder OR using the old, but cleaned up folder (don't forget step 1)
 3. Place the `sites-config.php` in the root folder of SIC 3
 4. Open SIC 3 in the browser and login
-5. SIC 3 will detect the file and ask you if you want to migrate your sitesx
+5. SIC 3 will detect the file and ask you if you want to migrate your sites
 6. Copy your `history` folder from the old installation to the new one (location is `/storage/history` in SIC 3)
+
+---
+
+## Addon System since version 3.4.0 (06/2026)
+Inspired by a [contribution of a user named "Slugger" in the WBCE forum](https://forum.wbce.org/viewtopic.php?pid=48034#p48034) I implemented an basic addon system which allows for extending SIC 3 functionality. His contribution, the [Versioncheck Addon](addons/Versioncheck) was adapted to this new addon system and is [included in this repo](addons/Versioncheck). You will also find a [Helloworld Addon](addons/Helloworld) bundled with SIC, which demonstrates the basics of the addon system. There is also a [README.md](addons/README.md) inside the `addons` folder with more information.

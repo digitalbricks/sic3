@@ -812,6 +812,9 @@ class Sic {
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
+            // sending a valid user agent string to prevent being blocked by simple web firewalls
+            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:155.0) Gecko/20100101 Firefox/155.0");
+
             $response['response'] = curl_exec($curl);
             $response['statuscode'] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);

@@ -122,7 +122,7 @@ class SicRestApi{
         if (file_exists($targetFile) && is_readable($targetFile)){
             $f = fopen($targetFile, "r");
             $historyData = array();
-            while (($line = fgetcsv($f)) !== false) {
+            while (($line = fgetcsv($f, null, ",", '"', "\\")) !== false) {
                 $lineCells = array();
                 foreach ($line as $cell) {
                     $lineCells[] = $cell;
@@ -136,7 +136,7 @@ class SicRestApi{
         return;
     }
 
-    
+
     public function apiV1HistoryDownloadRouteGet(){
         if(!$this->f3->get('sic')->checkLogin(false)){
             // not logged in
@@ -194,7 +194,7 @@ class SicRestApi{
             header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
             header("Cache-Control: post-check=0, pre-check=0", false);
             header("Pragma: no-cache");
-            
+
             echo $satPhpinfo;
         }
 

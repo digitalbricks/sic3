@@ -80,12 +80,12 @@ class Sic {
         $tableFound = $this->sicDB->exec('SELECT name FROM sqlite_master WHERE type="table" AND name="users"');
         if(count($tableFound) == 0){
             // create users table if not exists
-            $this->sicDB->exec('CREATE TABLE IF NOT EXISTS users 
+            $this->sicDB->exec('CREATE TABLE IF NOT EXISTS users
                 (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    username TEXT, 
-                    email TEXT, 
-                    pwhash TEXT, 
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT,
+                    email TEXT,
+                    pwhash TEXT,
                     is_admin INTEGER DEFAULT 0,
                     is_active INTEGER DEFAULT 0,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -97,7 +97,7 @@ class Sic {
             // add default admin user (admin/admin) if there is no user in the database
             $defaultAdminUsername = $this->f3->get('defaultAdminUsername');
             $defaultAdminPassword = $this->f3->get('defaultAdminPassword');
-            $this->sicDB->exec('INSERT INTO users (username,email,pwhash,is_admin,is_active,created_by) 
+            $this->sicDB->exec('INSERT INTO users (username,email,pwhash,is_admin,is_active,created_by)
                 VALUES ("'.$defaultAdminUsername.'","mail@example.com","'.password_hash($defaultAdminPassword, PASSWORD_DEFAULT).'",1,1,0)');
         }
 
@@ -127,13 +127,13 @@ class Sic {
         $tableFound = $this->sicDB->exec('SELECT name FROM sqlite_master WHERE type="table" AND name="sites"');
         if(count($tableFound) == 0){
             // bootstrapping sites table
-            $this->sicDB->exec('CREATE TABLE IF NOT EXISTS sites 
+            $this->sicDB->exec('CREATE TABLE IF NOT EXISTS sites
                 (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    name TEXT, 
-                    url TEXT, 
-                    sys TEXT, 
-                    secret TEXT, 
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    url TEXT,
+                    sys TEXT,
+                    secret TEXT,
                     is_active INTEGER
                     site_url TEXT,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -229,9 +229,9 @@ class Sic {
         if(count($tableFound) > 0){ return; }
 
         // bootstrapping settings table
-        $this->sicDB->exec('CREATE TABLE IF NOT EXISTS settings 
-                ( 
-                    name TEXT, 
+        $this->sicDB->exec('CREATE TABLE IF NOT EXISTS settings
+                (
+                    name TEXT,
                     value TEXT
                 )'
         );
@@ -284,7 +284,7 @@ class Sic {
             foreach($sites as $key => $value){
                 // prepare key 'inact' for db field 'is_active' by converting boolean to integer
                 $is_active = ($value['inact'] == true) ? 0 : 1;
-                $dbCommands[] = 'INSERT INTO sites (name,url,sys,secret,is_active,created_by) 
+                $dbCommands[] = 'INSERT INTO sites (name,url,sys,secret,is_active,created_by)
                 VALUES ("'.$key.'","'.$value['url'].'","'.$value['sys'].'","'.$value['secret'].'",'.$is_active.','.$userId.')';
                 $imported++;
             }
@@ -306,7 +306,7 @@ class Sic {
             $dbCommands = array();
             $imported = 0;
             foreach($sites as $key => $value){
-                $dbCommands[] = 'INSERT INTO sites (name,url,sys,secret,is_active,created_by) 
+                $dbCommands[] = 'INSERT INTO sites (name,url,sys,secret,is_active,created_by)
                 VALUES ("'.$value['name'].'","'.$value['url'].'","'.$value['sys'].'","'.$value['secret'].'",'.$value['is_active'].','.$userId.')';
                 $imported++;
             }
@@ -646,7 +646,7 @@ class Sic {
             $fp = fopen($targetFile, 'w');
 
             // create table header in CSV
-            fputcsv($fp,array('Site','System','Sys Ver','PHP Ver','Sat Ver', 'Date', 'Time'));
+            fputcsv($fp,array('Site','System','Sys Ver','PHP Ver','Sat Ver', 'Date', 'Time'),  ",", '"', "\\");
 
             // write lines
             fwrite($fp, $lines);
@@ -688,7 +688,7 @@ class Sic {
         if(file_exists($targetFile) && is_readable($targetFile)){
             $handle = fopen($targetFile, "r");
             // skip first line (moving pointer forward)
-            fgetcsv($handle);
+            fgetcsv($handle, null, ",", '"', "\\");
             while (! feof($handle)) {
                 $csvArray[] = fgetcsv($handle, 1000, ',');
             }
@@ -844,7 +844,7 @@ class Sic {
                 // create file and open if not already in place
                 $fh = fopen($targetFile, 'w');
                 // create table header in CSV
-                fputcsv($fh,array('System','Sys Ver','PHP Ver','Sat Ver', 'Date', 'Time'));
+                fputcsv($fh,array('System','Sys Ver','PHP Ver','Sat Ver', 'Date', 'Time'),  ",", '"', "\\");
             }
 
             // prepare data for csv
@@ -870,7 +870,7 @@ class Sic {
             };
 
             // write data to CSV;
-            fputcsv($fh,array($sys ,$sys_ver, $php_ver, $sat_ver, date('d.m.Y'), date('H:i:s')));
+            fputcsv($fh,array($sys ,$sys_ver, $php_ver, $sat_ver, date('d.m.Y'), date('H:i:s')),  ",", '"', "\\");
 
             // close file handle
             fclose($fh);
@@ -947,7 +947,7 @@ class Sic {
         if(file_exists($file)){
             // read last line from history file
             $data_csv = $this->tailCustom($file);
-            $data_arr = str_getcsv($data_csv);
+            $data_arr = str_getcsv($data_csv, ",", '"', "\\");
 
             // check if expected columns exists (skip if not)
             if(!array_key_exists(0,$data_arr) OR
@@ -1001,7 +1001,7 @@ class Sic {
         if(count($site)==0){
             $userId = $this->user['id'];
             $newSite = $this->sicDB->exec(
-                'INSERT INTO sites (name,url,sys,secret,is_active,created_by,link) 
+                'INSERT INTO sites (name,url,sys,secret,is_active,created_by,link)
                 VALUES ("'.$name.'","'.$url.'","'.$sys.'","'.$secret.'",'.$active.','.$userId.',"'.$link.'")'
             );
 
@@ -1014,13 +1014,13 @@ class Sic {
 
         // if site exists, update
         $updatedSite = $this->sicDB->exec(
-            'UPDATE sites SET 
-                    name="'.$name.'", 
+            'UPDATE sites SET
+                    name="'.$name.'",
                     url="'.$url.'",
                     sys="'.$sys.'",
                     secret="'.$secret.'",
                     is_active='.$active.',
-                    updated_at="'.date('Y-m-d H:i:s').'", 
+                    updated_at="'.date('Y-m-d H:i:s').'",
                     link="'.$link.'"
                     WHERE id='.$id
         );
@@ -1070,7 +1070,7 @@ class Sic {
             if($password=='' || strlen($password)<8){return false;}
             $userId = $this->user['id']; // creator of entry
             $newUser = $this->sicDB->exec(
-                'INSERT INTO users (username,email,pwhash,is_admin,is_active,created_by) 
+                'INSERT INTO users (username,email,pwhash,is_admin,is_active,created_by)
                 VALUES ("'.$username.'","'.$email.'","'.password_hash($password, PASSWORD_DEFAULT).'",'.$admin.','.$active.','.$userId.')'
             );
 
@@ -1092,8 +1092,8 @@ class Sic {
             // if password is set and long enough we update the record WITH password
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
             $updatedUser = $this->sicDB->exec(
-                'UPDATE users SET 
-                    username="'.$username.'", 
+                'UPDATE users SET
+                    username="'.$username.'",
                     email="'.$email.'",
                     pwhash="'.$passwordHash.'",
                     is_admin='.$admin.',
@@ -1104,12 +1104,12 @@ class Sic {
         }else{
             // if password is not set or not long enough we update the record WITHOUT password
             $updatedUser = $this->sicDB->exec(
-                'UPDATE users SET 
-                    username="'.$username.'", 
+                'UPDATE users SET
+                    username="'.$username.'",
                     email="'.$email.'",
                     is_admin='.$admin.',
                     is_active='.$active.',
-                    updated_at="'.date('Y-m-d H:i:s').'" 
+                    updated_at="'.date('Y-m-d H:i:s').'"
                     WHERE id='.$id
             );
         }
@@ -1300,7 +1300,7 @@ class Sic {
         return true;
     }
 
-    
+
     /**
      * Removes site secret and user data from sites array
      * Used on REST API

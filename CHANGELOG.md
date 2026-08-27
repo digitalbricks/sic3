@@ -1,6 +1,9 @@
 # SIC 3 changelog
 (since SIC 3.2.0)
 
+## 3.4.1, 27.08.2026
+* added explicit $escape parameter on calls to `fputcsv`, `fgetcsv`, `str_getcsv` to prevent errors under PHP 8.4 (See https://php.watch/versions/8.4/csv-functions-escape-parameter)
+
 ## 3.4.0, 16.06.2026
 * added addon system
 * versioncheck addon by "Slugger" included

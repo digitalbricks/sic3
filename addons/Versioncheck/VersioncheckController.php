@@ -115,6 +115,7 @@ class VersioncheckController extends SicAddon {
             'moodle'     => 'https://moodle.org/downloads/',
             'owncloud'   => 'https://owncloud.com/download-server/',
             'processwire' => 'https://processwire.com/download/core/',
+            'shopware6'   => 'https://www.shopware.com/de/download/'
         ];
     }
 
@@ -133,6 +134,7 @@ class VersioncheckController extends SicAddon {
             ['phpbb',     'phpBB',      'github', 'phpbb/phpbb',                                             'stable'],
             ['moodle',    'Moodle',     'github', 'moodle/moodle',                                           'stable'],
             ['owncloud',  'ownCloud',   'github', 'owncloud/core',                                           'stable'],
+            ['shopware6', 'Shopware 6', 'github', 'shopware/shopware',                                       'stable'],
             // demo für extension-based endpoint (siehe extensions/processwire.php)
             ['processwire',  'ProcessWire CMS',   'extension', 'x_processwire',                              'stable'],
         ];

@@ -5,7 +5,7 @@ $f3 = require_once(dirname(__FILE__).'/f3/base.php');
 $f3->set('AUTOLOAD',dirname(__FILE__).'/sic/');
 
 // - set the SIC version
-$f3->set('tplSicVersion','3.4.1');
+$f3->set('tplSicVersion','3.5.0');
 
 // – load demo mode settings
 require_once(dirname(__FILE__).'/extras/demomode-settings.php');
@@ -34,4 +34,3 @@ $f3->set('sic', new Sic($f3));
  * @since 3.4.0
  */
 $sicAddons = new SicAddons($f3);
-

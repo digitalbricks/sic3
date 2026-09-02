@@ -79,6 +79,16 @@ class SicUiViews{
         $this->f3->set('tplPagetitle','Sites overview');
         $this->f3->set('tplHeadline','Sites overview');
         $this->f3->set('tplPartial','core/views/overview.html');
+
+        // getting number of concurrent requests for output inside a <script> element
+        // so vue can use it to limit the number of concurrent requests
+        // @since v3.5.0
+        $settings = $this->f3->get('sic')->getSettings();
+        $concurrentRequests = $settings['concurrent_requests'];
+        // - set default value if not set or invalid
+        if(intval($concurrentRequests) < 1){ $concurrentRequests = 8; }
+        $this->f3->set('tplConcurrentRequests',$settings['concurrent_requests']);
+
         echo \Template::instance()->render('core/views/_base.html');
     }
 
@@ -721,6 +731,12 @@ class SicUiViews{
         $this->f3->set('tplPagetitle','Settings');
         $this->f3->set('tplHeadline','Settings');
         $this->f3->set('tplPartial','core/views/settings.html');
+
+        // @since v3.5.0
+        $concurrentRequests = $settings['concurrent_requests'];
+        if(intval($concurrentRequests) < 1){ $concurrentRequests = 8; }
+        $this->f3->set('tplConcurrentRequests',$concurrentRequests);
+
         echo \Template::instance()->render('core/views/_base.html');
     }
 
@@ -747,6 +763,16 @@ class SicUiViews{
             $this->enqueueMessage("Satellite Contact Information saved",'success');
         } else {
             $this->enqueueMessage("Satellite Contact Information could not be saved",'danger');
+        }
+
+        // @since v3.5.0
+        $concurrentRequests = $this->f3->get('POST.concurrentRequests');
+        if(intval($concurrentRequests) < 1){ $concurrentRequests = 8; }
+        $editedID = $this->f3->get('sic')->saveSetting('concurrent_requests',$concurrentRequests);
+        if($editedID){
+            $this->enqueueMessage("Number of Concurrent Requests saved",'success');
+        } else {
+            $this->enqueueMessage("Number of Concurrent Requests could not be saved",'danger');
         }
 
 

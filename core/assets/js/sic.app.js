@@ -12,7 +12,7 @@ const endpoints = "api/v1/sites/";
 const siclight = Vue.createApp({
     data() {
         return {
-            sicVersion: '3.0.1',
+            sicVersion: '3.0.2',
             configFileExists: true, // NOTE: we start with 'true' in order to prevent error message to "flicker" on page load
             activeSites: {},
             inactiveSites: {},
@@ -182,8 +182,7 @@ const siclight = Vue.createApp({
                 this.requestQueue.push(id);
             };
             this.isAllSitesRefresh = true;
-            this.doRefresh();
-
+          this.doRefresh();
         },
         refreshFilteredSites: function(){
             //add all filtered sites to queue
@@ -194,17 +193,17 @@ const siclight = Vue.createApp({
         },
         doRefresh: function(){
 
-            var RequestPromises = []
+            // @since 3.0.2
+            // get maxConcurrentRequests from sicJsConfig (defined core/views/overview.html)
+            let maxConcurrentRequests = Math.max(1, parseInt(sicJsConfig.maxConcurrentRequests, 10) || 1);
+            console.log('Doing refresh with concurrent requests limited to ' + maxConcurrentRequests);
+
+            var queuedIds = this.requestQueue.slice();
+            var nextRequest = 0;
 
             this.progressMax = this.requestQueue.length;
 
-            // loop through requestQueue
-            for (let [key, value] of Object.entries(this.requestQueue)) {
-                //console.log(`${key}: ${value}`);
-
-                // get hash
-                var id = value;
-
+            var processRequest = (id) => {
                 // get name
                 var name = this.activeSites[id].name;
 
@@ -212,7 +211,7 @@ const siclight = Vue.createApp({
                 this.activeSites[id].state = 'refreshing';
 
                 // request to endpoint
-                var SinglePromise = axios.post(endpoints+'getSatelliteResponse', {
+                return axios.post(endpoints+'getSatelliteResponse', {
                     id: id
                 })
                     .then(response => {
@@ -220,7 +219,7 @@ const siclight = Vue.createApp({
                         // getting id (hash) and name from sat
                         // NOTE: we cannot use var 'id' here, because of promise
                         var id = response.data.id;
-                        sitename = response.data.name;
+                        var sitename = response.data.name;
 
                         if(response.data.statuscode==200){
                             // getting satellite data
@@ -252,34 +251,35 @@ const siclight = Vue.createApp({
                             this.activeSites[id].state = "refresh-error";
                             this.notify('danger','<strong>'+this.activeSites[id].name+': </strong>Refresh failed<br/><small>' + response.data.message +'</small>');
                         }
-
-
-                        // remove one element from the beginning of the array
-                        // (=latest processed element)
-                        this.requestQueue.shift();
-                        console.log(id + ' (' + sitename + ') processed, '+this.requestQueue.length + ' more items to process ...');
-
                     })
                     .catch(function (error) {
                         // handle error
                         console.log(error);
                     })
-                    .then(function () {
-                        // always executed
+                    .then(() => {
+                        var queueIndex = this.requestQueue.indexOf(id);
+                        if(queueIndex !== -1){
+                            this.requestQueue.splice(queueIndex, 1);
+                        }
+                        console.log(id + ' (' + name + ') processed, '+this.requestQueue.length + ' more items to process ...');
                     });
+            };
 
+            var runWorker = () => {
+                if(nextRequest >= queuedIds.length){
+                    return Promise.resolve();
+                }
 
-                // push SinglePromise to array RequestPromises
-                RequestPromises.push(SinglePromise);
-
-
-            } // end for() llop
+                var id = queuedIds[nextRequest++];
+                return processRequest(id).then(runWorker);
+            };
 
             /*
             execute if all requests (promises) completed (with or without error)
             see promiseReflect() method for info why .map() is invoked
             */
-            Promise.all(RequestPromises.map(this.promiseReflect)).then(response => {
+            var workerCount = Math.min(maxConcurrentRequests, queuedIds.length);
+            Promise.all(Array.from({length: workerCount}, runWorker).map(this.promiseReflect)).then(response => {
                 console.log('Queue completed.');
                 this.notify('success','<strong>Refresh queue completed</strong>');
                 // reset requestQueue (reset progress bar)
@@ -369,5 +369,3 @@ const siclight = Vue.createApp({
 
 
 siclight.mount('#sic');
-
-

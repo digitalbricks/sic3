@@ -42,6 +42,10 @@ class Sic {
         $this->bootstrapUsers();
         $this->bootstrapSites();
         $this->bootstrapSettings();
+
+        // running migrations (since SIC 3.5.0)
+        // migrations are handled in SicMigrations.php
+        $sicMigrations = new SicMigrations($this->sicDB, $this->rootPath);
     }
 
     /**
@@ -236,10 +240,16 @@ class Sic {
                 )'
         );
 
-        // create (blank) setting for sat_contact (if not exists
+        // create (blank) setting for sat_contact (if not exists)
         $sat_contact = $this->sicDB->exec('SELECT value FROM settings WHERE name = "sat_contact"');
         if(count($sat_contact) == 0){
             $this->sicDB->exec('INSERT INTO settings (name,value) VALUES ("sat_contact","")');
+        }
+
+        // create setting for concurrent requests (if not exists)
+        $concurrent_requests = $this->sicDB->exec('SELECT value FROM settings WHERE name = "concurrent_requests"');
+        if(count($concurrent_requests) == 0){
+            $this->sicDB->exec('INSERT INTO settings (name,value) VALUES ("concurrent_requests","8")');
         }
     }
 
